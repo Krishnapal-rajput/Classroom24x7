@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdminPanel from "./Admin";
 import AdminLogin from "./AdminLogin";
+import Employee from "./Employee";
 import Home from "./Home";
 import { auth } from "./firebaseConfig";
 
@@ -13,6 +14,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/employee" element={<Employee/>} />
       <Route path="/admin-login" element={<AdminLogin />} />
       <Route
         path="/admin"
