@@ -245,6 +245,8 @@ const Home = () => {
             autoComplete="off"
             value={formData.contact}
             onChange={handleChange}
+            inputMode="numeric"
+            pattern="[0-9]{10}"
             required
           />
           <select
