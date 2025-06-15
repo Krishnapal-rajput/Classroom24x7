@@ -43,16 +43,30 @@ const Home = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Enforce numeric-only for contact field
+    if (name === "contact") {
+      const numericValue = value.replace(/\D/g, ""); // Remove non-digits
+      if (numericValue.length > 10) return; // Max 10 digits
+      setFormData((prev) => ({ ...prev, [name]: numericValue }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Final check on contact before submitting
+    if (!/^\d{10}$/.test(formData.contact)) {
+      alert("Contact number must be exactly 10 digits.");
+      return;
+    }
+
     try {
       const payload = {
         name: formData.name.trim(),
-        contact: String(formData.contact).trim(),
+        contact: formData.contact.trim(),
         gender: formData.gender,
         createdAt: Timestamp.now(),
       };
@@ -246,7 +260,8 @@ const Home = () => {
             value={formData.contact}
             onChange={handleChange}
             inputMode="numeric"
-            pattern="[0-9]{10}"
+            pattern="\d{10}"
+            maxLength={10}
             required
           />
           <select
