@@ -64,12 +64,13 @@ const Home = () => {
       setTimeout(() => setSubmitted(false), 3000);
     } catch (err) {
       console.error("🔥 Error submitting inquiry:", err.message);
-      alert("Something went wrong while submitting the form. Please try again.");
+      alert(
+        "Something went wrong while submitting the form. Please try again."
+      );
     }
   };
 
   return (
-
     <div className="home-container">
       {/* Header & Navigation */}
       <header className="nav-header">
@@ -78,7 +79,9 @@ const Home = () => {
           ☰
         </div>
         <nav id="nav-menu" className="nav-menu hidden">
-          <a href="#home" className="active-link">Home</a>
+          <a href="#home" className="active-link">
+            Home
+          </a>
           <a href="#courses">Courses</a>
           <a href="#gallery">Gallery</a>
           <a href="#aboutus">About Us</a>
@@ -98,12 +101,14 @@ const Home = () => {
         <h3>Our Vision</h3>
         <p>
           To revolutionize education by making high-quality, accessible, and
-          flexible learning available to everyone, everywhere—anytime they need it.
+          flexible learning available to everyone, everywhere—anytime they need
+          it.
         </p>
         <h3>Our Mission</h3>
         <p>
           We are dedicated to nurturing potential, promoting lifelong learning,
-          and creating a sustainable future through inclusive education solutions.
+          and creating a sustainable future through inclusive education
+          solutions.
         </p>
       </section>
 
@@ -156,18 +161,55 @@ const Home = () => {
       {/* About Us */}
       <section id="aboutus" className="section gray-bg">
         <h2>About Us</h2>
-        <p><strong>Author:</strong> Krishna Rajput</p>
-        <p><strong>Our Teachers:</strong> Experienced professionals in IT, business, and creative fields.</p>
-        <p><strong>Partner Companies:</strong> TechEd Pvt Ltd, LearnPro, EduForce</p>
+        <p>
+          <strong>Author:</strong> Krishna Rajput
+        </p>
+        <p>
+          <strong>Our Teachers:</strong> Experienced professionals in IT,
+          business, and creative fields.
+        </p>
+        <p>
+          <strong>Partner Companies:</strong> TechEd Pvt Ltd, LearnPro, EduForce
+        </p>
 
         <div className="card-grid">
           {[
-            { name: "Yash R.", role: "M.Sc. Computer Science", exp: "7 years", gender: "boy" },
-            { name: "Deepak Kapoor", role: "MBA, Marketing", exp: "10 years", gender: "boy" },
-            { name: "Seema Joshi", role: "B.Ed., English", exp: "5 years", gender: "girl" },
-            { name: "Nihit Rao", role: "B.Tech, Computer Science", exp: "6 years", gender: "boy" },
-            { name: "Vaani Desai", role: "M.Sc., Data Science", exp: "4 years", gender: "girl" },
-            { name: "Aanshu Bansal", role: "MCA, AI Specialist", exp: "8 years", gender: "girl" },
+            {
+              name: "Yash R.",
+              role: "M.Sc. Computer Science",
+              exp: "7 years",
+              gender: "boy",
+            },
+            {
+              name: "Deepak Kapoor",
+              role: "MBA, Marketing",
+              exp: "10 years",
+              gender: "boy",
+            },
+            {
+              name: "Seema Joshi",
+              role: "B.Ed., English",
+              exp: "5 years",
+              gender: "girl",
+            },
+            {
+              name: "Nihit Rao",
+              role: "B.Tech, Computer Science",
+              exp: "6 years",
+              gender: "boy",
+            },
+            {
+              name: "Vaani Desai",
+              role: "M.Sc., Data Science",
+              exp: "4 years",
+              gender: "girl",
+            },
+            {
+              name: "Aanshu Bansal",
+              role: "MCA, AI Specialist",
+              exp: "8 years",
+              gender: "girl",
+            },
           ].map((member, idx) => (
             <div key={idx} className="card">
               <img
@@ -186,11 +228,12 @@ const Home = () => {
       {/* Inquiry Form */}
       <section id="inquiry" className="section">
         <h2>Inquiry Form</h2>
-        <form className="form" onSubmit={handleSubmit}>
+        <form className="form" autoComplete="off" onSubmit={handleSubmit}>
           <input
             type="text"
             name="name"
             placeholder="Name"
+            autoComplete="off"
             value={formData.name}
             onChange={handleChange}
             required
@@ -199,6 +242,7 @@ const Home = () => {
             type="tel"
             name="contact"
             placeholder="Contact"
+            autoComplete="off"
             value={formData.contact}
             onChange={handleChange}
             required
@@ -231,7 +275,6 @@ const Home = () => {
         <p>Contact: +91-1234567890 | Address: New Delhi, India</p>
       </footer>
     </div>
-
   );
 };
 
