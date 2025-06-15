@@ -1,0 +1,53 @@
+.admin-login-container {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+.admin-login-container h2 {
+  font-size: 1.8rem;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.admin-login-container input {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 10px 0;
+  font-size: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+.admin-login-container input:focus {
+  border-color: #007bff;
+}
+
+.admin-login-container button {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 10px;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.admin-login-container button:hover {
+  background-color: #0056b3;
+}
+
+#recaptcha-container {
+  margin-top: 20px;
+}
