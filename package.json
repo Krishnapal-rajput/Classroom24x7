@@ -2,7 +2,8 @@
   "name": "classroom24x7",
   "version": "1.0.0",
   "scripts": {
-    "start": "parcel index.html"
+    "start": "parcel index.html",
+    "build": "parcel build index.html --dist-dir dist && cp _redirects dist/"
   },
   "keywords": [],
   "author": "",
