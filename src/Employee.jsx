@@ -160,7 +160,8 @@ function Employee() {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
   };
 
-  // On component mount, restore login state and data
+  // ====== Removed auto-login useEffect to force login every visit ======
+  /*
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("employeeLoggedIn") === "true";
     const details = localStorage.getItem("employeeDetails");
@@ -172,6 +173,7 @@ function Employee() {
       loadWorkFromFirestore(parsedDetails.id);
     }
   }, []);
+  */
 
   // Handle Excel file upload
   const handleFileUpload = (e) => {
