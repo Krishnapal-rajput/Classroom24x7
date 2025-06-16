@@ -220,6 +220,37 @@ const AdminPanel = () => {
     }
   };
 
+  // Clean all user inquiries: confirm, export, delete, and clear UI
+  const cleanUserInquiries = async () => {
+    const confirmClean = window.confirm(
+      "⚠️ This action will permanently delete all user inquiry data. Do you want to continue?"
+    );
+    if (!confirmClean) return;
+
+    try {
+      // Export current userData before deleting
+      exportToExcel(userData, "UserInquiries_Backup");
+
+      // Fetch all docs in userData
+      const userDataRef = collection(db, "userData");
+      const snapshot = await getDocs(userDataRef);
+
+      // Delete all docs
+      const deletions = snapshot.docs.map((docSnap) =>
+        deleteDoc(doc(db, "userData", docSnap.id))
+      );
+      await Promise.all(deletions);
+
+      // Clear userData state to empty the table
+      setUserData([]);
+
+      alert("All user inquiries have been deleted successfully.");
+    } catch (err) {
+      console.error("Failed to clean user inquiries:", err);
+      alert("An error occurred while cleaning user inquiries.");
+    }
+  };
+
   // Admin logout function
   const handleLogout = async () => {
     try {
@@ -248,6 +279,9 @@ const AdminPanel = () => {
             onClick={() => exportToExcel(userData, "UserInquiries")}
           >
             Export Excel
+          </button>
+          <button className="export-btn" onClick={cleanUserInquiries}>
+            Clean Inquiries
           </button>
         </div>
         <div className="table-wrapper">
