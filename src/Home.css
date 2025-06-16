@@ -30,7 +30,7 @@ html {
 }
 
 .logo {
-  height: 48px;
+  max-height: 48px;
   width: auto;
   max-width: 100%;
   object-fit: contain;
