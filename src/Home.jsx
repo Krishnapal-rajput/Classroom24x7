@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import logo from "./LOGO/LOGO.png";
 import { db } from "./firebaseConfig";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import "./Home.css";
@@ -44,20 +43,28 @@ const Home = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Enforce numeric-only for contact field
     if (name === "contact") {
-      const numericValue = value.replace(/\D/g, ""); // Remove non-digits
-      if (numericValue.length > 10) return; // Max 10 digits
+      const numericValue = value.replace(/\D/g, "");
+      if (numericValue.length > 10) return;
       setFormData((prev) => ({ ...prev, [name]: numericValue }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
+  const handlePaste = (e) => {
+    if (e.clipboardData) {
+      const paste = e.clipboardData.getData("text");
+      if (!/^\d{0,10}$/.test(paste)) {
+        e.preventDefault();
+        alert("Only numeric values up to 10 digits are allowed.");
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Final check on contact before submitting
     if (!/^\d{10}$/.test(formData.contact)) {
       alert("Contact number must be exactly 10 digits.");
       return;
@@ -78,9 +85,7 @@ const Home = () => {
       setTimeout(() => setSubmitted(false), 3000);
     } catch (err) {
       console.error("🔥 Error submitting inquiry:", err.message);
-      alert(
-        "Something went wrong while submitting the form. Please try again."
-      );
+      alert("Something went wrong while submitting the form. Please try again.");
     }
   };
 
@@ -88,7 +93,11 @@ const Home = () => {
     <div className="home-container">
       {/* Header & Navigation */}
       <header className="nav-header">
-        <img src="/LOGO.png" alt="Classroom 24x7 Logo" className="logo-image" />
+        <img
+          src="https://github.com/Krishnapal-rajput/Classroom24x7-index/blob/main/logo/App%20icon%20Log%20512x512.jpg?raw=true"
+          alt="Classroom 24x7 Logo"
+          className="logo-image"
+        />
         <div className="menu-toggle" onClick={() => window.toggleMenu()}>
           ☰
         </div>
@@ -253,14 +262,13 @@ const Home = () => {
             required
           />
           <input
-            type="tel"
+            type="text"
             name="contact"
             placeholder="Contact"
-            autoComplete="off"
             value={formData.contact}
             onChange={handleChange}
+            onPaste={handlePaste}
             inputMode="numeric"
-            pattern="\d{10}"
             maxLength={10}
             required
           />
@@ -270,9 +278,11 @@ const Home = () => {
             onChange={handleChange}
             required
           >
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
+            <option value="" disabled>
+              Select Gender
+            </option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
           </select>
           <button type="submit">Request Callback</button>
           {submitted && (
@@ -283,13 +293,7 @@ const Home = () => {
 
       {/* Footer */}
       <footer className="footer">
-        <p>&copy; 2025 Classroom 24x7</p>
-        <div className="socials">
-          <i className="fab fa-facebook"></i>
-          <i className="fab fa-twitter"></i>
-          <i className="fab fa-instagram"></i>
-        </div>
-        <p>Contact: +91-1234567890 | Address: New Delhi, India</p>
+        <p>&copy; 2025 Classroom 24x7. All rights reserved.</p>
       </footer>
     </div>
   );
