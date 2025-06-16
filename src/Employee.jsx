@@ -9,7 +9,6 @@ import {
   doc,
   writeBatch,
   deleteDoc,
-  Timestamp,
 } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import "./Employee.css";
@@ -35,16 +34,15 @@ function Employee() {
   const [empDetails, setEmpDetails] = useState(null);
   const logDocIdRef = useRef(null);
 
-  // Save call work data to Firestore in batch
   const saveWorkToFirestore = async (empId, workData) => {
     const callsCollection = collection(db, "employeeWork", empId, "calls");
     const snapshot = await getDocs(callsCollection);
 
     const existingDocs = {};
     snapshot.docs.forEach((docSnap) => {
-      const d = docSnap.data();
-      if (d.contact) {
-        existingDocs[d.contact] = { ...d, _docId: docSnap.id };
+      const data = docSnap.data();
+      if (data.contact) {
+        existingDocs[data.contact] = { ...data, _docId: docSnap.id };
       }
     });
 
@@ -74,33 +72,26 @@ function Employee() {
     await batch.commit();
   };
 
-  // Load call work data from Firestore
   const loadWorkFromFirestore = async (empId) => {
-    try {
-      const snapshot = await getDocs(collection(db, "employeeWork", empId, "calls"));
-      const work = snapshot.docs
-        .map((doc, index) => {
-          const data = doc.data();
-          return {
-            id: Number(data.id) || index + 1,
-            name: data.name || "",
-            gender: data.gender || "",
-            contact: data.contact || "",
-            callTime: data.callTime || "",
-            response: data.response || "",
-          };
-        })
-        .sort((a, b) => a.id - b.id);
+    const snapshot = await getDocs(collection(db, "employeeWork", empId, "calls"));
+    const work = snapshot.docs
+      .map((doc, index) => {
+        const data = doc.data();
+        return {
+          id: Number(data.id) || index + 1,
+          name: data.name || "",
+          gender: data.gender || "",
+          contact: data.contact || "",
+          callTime: data.callTime || "",
+          response: data.response || "",
+        };
+      })
+      .sort((a, b) => a.id - b.id);
 
-      setData(work);
-      saveToLocalStorage(work);
-    } catch (err) {
-      console.error("Failed to load work data:", err);
-      setData([]);
-    }
+    setData(work);
+    saveToLocalStorage(work);
   };
 
-  // Employee login
   const handleLogin = async () => {
     try {
       const snapshot = await getDocs(collection(db, "employees"));
@@ -121,7 +112,7 @@ function Employee() {
         const logDoc = await addDoc(collection(db, "loginLogs"), {
           empId: found.id,
           name: found.name,
-          loginTime: Timestamp.fromDate(new Date()),
+          loginTime: new Date(),
           logoutTime: null,
         });
 
@@ -137,12 +128,11 @@ function Employee() {
     }
   };
 
-  // Employee logout with logout time update
   const handleLogout = async () => {
     if (empDetails && logDocIdRef.current) {
       try {
         await updateDoc(doc(db, "loginLogs", logDocIdRef.current), {
-          logoutTime: Timestamp.fromDate(new Date()),
+          logoutTime: new Date(),
         });
       } catch (err) {
         console.error("Failed to update logout time:", err);
@@ -160,7 +150,6 @@ function Employee() {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
   };
 
-  // On component mount, restore login state and data
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("employeeLoggedIn") === "true";
     const details = localStorage.getItem("employeeDetails");
@@ -173,7 +162,6 @@ function Employee() {
     }
   }, []);
 
-  // Handle Excel file upload
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file || !empDetails) return;
@@ -208,7 +196,6 @@ function Employee() {
     reader.readAsBinaryString(file);
   };
 
-  // Handle call button click (update call time and copy contact or dial on mobile)
   const handleCallClick = async (index) => {
     const updated = [...data];
     updated[index].callTime = format(new Date(), "yyyy-MM-dd HH:mm:ss");
@@ -218,18 +205,13 @@ function Employee() {
 
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     if (isMobile) {
-      window.location.href = `tel:${updated[index].contact}`;
+      window.location.href = tel:${updated[index].contact};
     } else {
-      try {
-        await navigator.clipboard.writeText(updated[index].contact);
-        alert("Contact copied to clipboard.");
-      } catch {
-        alert("Failed to copy contact.");
-      }
+      navigator.clipboard.writeText(updated[index].contact);
+      alert("Contact copied to clipboard.");
     }
   };
 
-  // Handle changing response option for a call record
   const handleResponseChange = async (index, value) => {
     const updated = [...data];
     updated[index].response = value;
@@ -238,7 +220,6 @@ function Employee() {
     await saveWorkToFirestore(empDetails.id, updated);
   };
 
-  // Export current data to Excel
   const exportToExcel = () => {
     if (data.length === 0) return;
     const ws = XLSX.utils.json_to_sheet(data);
@@ -247,7 +228,6 @@ function Employee() {
     XLSX.writeFile(wb, "call_data.xlsx");
   };
 
-  // Clean current data after export by deleting all call docs for employee
   const cleanData = async () => {
     if (!empDetails) return;
     const confirmed = window.confirm("This will export and delete all current work. Proceed?");
@@ -255,16 +235,9 @@ function Employee() {
 
     exportToExcel();
 
-    try {
-      const callsSnapshot = await getDocs(collection(db, "employeeWork", empDetails.id, "calls"));
-      const deletions = callsSnapshot.docs.map((docSnap) =>
-        deleteDoc(doc(db, "employeeWork", empDetails.id, "calls", docSnap.id))
-      );
-      await Promise.all(deletions);
-    } catch (err) {
-      console.error("Failed to clean data:", err);
-      alert("Error cleaning data.");
-      return;
+    const callsSnapshot = await getDocs(collection(db, "employeeWork", empDetails.id, "calls"));
+    for (const docSnap of callsSnapshot.docs) {
+      await deleteDoc(doc(db, "employeeWork", empDetails.id, "calls", docSnap.id));
     }
 
     setData([]);
@@ -282,7 +255,6 @@ function Employee() {
           className="login-input"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          autoComplete="username"
         />
         <input
           type="password"
@@ -290,7 +262,6 @@ function Employee() {
           className="login-input"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
         />
         <button onClick={handleLogin} className="login-button">
           Login
