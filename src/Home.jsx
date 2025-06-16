@@ -293,7 +293,13 @@ const Home = () => {
 
       {/* Footer */}
       <footer className="footer">
-        <p>&copy; 2025 Classroom 24x7. All rights reserved.</p>
+        <p>&copy; 2025 Classroom 24x7</p>
+        <div className="socials">
+          <i className="fab fa-facebook"></i>
+          <i className="fab fa-twitter"></i>
+          <i className="fab fa-instagram"></i>
+        </div>
+        <p>Contact: +91-1234567890 | Address: New Delhi, India</p>
       </footer>
     </div>
   );
