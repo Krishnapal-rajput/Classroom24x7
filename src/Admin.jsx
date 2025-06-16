@@ -22,6 +22,7 @@ const AdminPanel = () => {
     password: "",
   });
 
+  // Fetch user data, employees, and login logs on mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -62,14 +63,20 @@ const AdminPanel = () => {
 
         const logs = snapshot.docs.map((doc) => {
           const data = doc.data();
+
           const loginTime =
             data.loginTime instanceof Timestamp
               ? data.loginTime.toDate().toLocaleString()
-              : new Date(data.loginTime).toLocaleString() || "N/A";
+              : data.loginTime
+              ? new Date(data.loginTime).toLocaleString()
+              : "N/A";
+
           const logoutTime =
             data.logoutTime instanceof Timestamp
               ? data.logoutTime.toDate().toLocaleString()
-              : new Date(data.logoutTime).toLocaleString() || "N/A";
+              : data.logoutTime
+              ? new Date(data.logoutTime).toLocaleString()
+              : "N/A";
 
           return {
             empId: data.empId || "Unknown",
@@ -91,6 +98,7 @@ const AdminPanel = () => {
     fetchEmployeeLogs();
   }, []);
 
+  // Export any JSON array data to Excel file
   const exportToExcel = (data, fileName) => {
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
@@ -98,6 +106,7 @@ const AdminPanel = () => {
     XLSX.writeFile(workbook, `${fileName}.xlsx`);
   };
 
+  // Add a new employee
   const handleAddEmployee = async () => {
     try {
       const { name, username, password } = newEmp;
@@ -130,6 +139,7 @@ const AdminPanel = () => {
     }
   };
 
+  // Update employee data
   const handleUpdateEmployee = async (id, updatedData) => {
     try {
       const empRef = doc(db, "employees", id);
@@ -145,6 +155,7 @@ const AdminPanel = () => {
     }
   };
 
+  // Delete employee by id
   const handleDeleteEmployee = async (id) => {
     try {
       await deleteDoc(doc(db, "employees", id));
@@ -154,6 +165,7 @@ const AdminPanel = () => {
     }
   };
 
+  // Fix incorrect login/logout timestamps by converting them to Firestore Timestamp
   const cleanLoginLogs = async () => {
     try {
       const logsRef = collection(db, "loginLogs");
@@ -184,6 +196,7 @@ const AdminPanel = () => {
     }
   };
 
+  // Delete all login logs with confirmation
   const resetLoginLogs = async () => {
     const confirmReset = window.confirm(
       "⚠️ This action will permanently delete all employee login logs. Do you want to continue?"
@@ -207,6 +220,7 @@ const AdminPanel = () => {
     }
   };
 
+  // Admin logout function
   const handleLogout = async () => {
     try {
       await auth.signOut();
