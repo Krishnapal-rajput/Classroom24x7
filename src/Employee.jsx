@@ -100,6 +100,25 @@ function Employee() {
     }
   };
 
+  // Auto-login on page refresh
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("employeeLoggedIn") === "true";
+    const details = localStorage.getItem("employeeDetails");
+    const localData = loadFromLocalStorage();
+
+    if (isLoggedIn && details) {
+      const parsedDetails = JSON.parse(details);
+      setLoggedIn(true);
+      setEmpDetails(parsedDetails);
+
+      if (localData.length > 0) {
+        setData(localData);
+      } else {
+        loadWorkFromFirestore(parsedDetails.id);
+      }
+    }
+  }, []);
+
   // Employee login
   const handleLogin = async () => {
     try {
@@ -137,7 +156,7 @@ function Employee() {
     }
   };
 
-  // Employee logout with logout time update
+  // Employee logout
   const handleLogout = async () => {
     if (empDetails && logDocIdRef.current) {
       try {
@@ -159,21 +178,6 @@ function Employee() {
     localStorage.removeItem("employeeDetails");
     localStorage.removeItem(LOCAL_STORAGE_KEY);
   };
-
-  // ====== Removed auto-login useEffect to force login every visit ======
-  /*
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("employeeLoggedIn") === "true";
-    const details = localStorage.getItem("employeeDetails");
-
-    if (isLoggedIn && details) {
-      const parsedDetails = JSON.parse(details);
-      setLoggedIn(true);
-      setEmpDetails(parsedDetails);
-      loadWorkFromFirestore(parsedDetails.id);
-    }
-  }, []);
-  */
 
   // Handle Excel file upload
   const handleFileUpload = (e) => {
@@ -210,7 +214,7 @@ function Employee() {
     reader.readAsBinaryString(file);
   };
 
-  // Handle call button click (update call time and copy contact or dial on mobile)
+  // Handle call click
   const handleCallClick = async (index) => {
     const updated = [...data];
     updated[index].callTime = format(new Date(), "yyyy-MM-dd HH:mm:ss");
@@ -231,7 +235,7 @@ function Employee() {
     }
   };
 
-  // Handle changing response option for a call record
+  // Handle response change
   const handleResponseChange = async (index, value) => {
     const updated = [...data];
     updated[index].response = value;
@@ -240,7 +244,7 @@ function Employee() {
     await saveWorkToFirestore(empDetails.id, updated);
   };
 
-  // Export current data to Excel
+  // Export to Excel
   const exportToExcel = () => {
     if (data.length === 0) return;
     const ws = XLSX.utils.json_to_sheet(data);
@@ -249,7 +253,7 @@ function Employee() {
     XLSX.writeFile(wb, "call_data.xlsx");
   };
 
-  // Clean current data after export by deleting all call docs for employee
+  // Clean data
   const cleanData = async () => {
     if (!empDetails) return;
     const confirmed = window.confirm("This will export and delete all current work. Proceed?");
@@ -274,6 +278,7 @@ function Employee() {
     alert("Data cleaned successfully. You can now upload a new file.");
   };
 
+  // UI
   if (!loggedIn) {
     return (
       <div className="login-container">
