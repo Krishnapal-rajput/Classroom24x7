@@ -33,11 +33,12 @@ function Employee() {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [empDetails, setEmpDetails] = useState(null);
+  const [genderFilter, setGenderFilter] = useState("");
+  const [responseFilter, setResponseFilter] = useState("");
   const logDocIdRef = useRef(null);
 
-  // Save data to Firestore under employeeWork/{empId}/calls
+  // Save work data to Firestore
   const saveWorkToFirestore = async (empId, workData) => {
-    console.log("Saving work to Firestore...");
     const callsCollection = collection(db, "employeeWork", empId, "calls");
     const snapshot = await getDocs(callsCollection);
 
@@ -55,6 +56,7 @@ function Employee() {
         id: Number(row.id) || 0,
         name: row.name || "",
         gender: row.gender || "",
+        city: row.city || "",
         contact: row.contact || "",
         callTime: row.callTime || "",
         response: row.response || "",
@@ -72,13 +74,11 @@ function Employee() {
     });
 
     await batch.commit();
-    console.log("Work saved to Firestore.");
   };
 
-  // Load work data from Firestore when employee logs in
+  // Load work from Firestore
   const loadWorkFromFirestore = async (empId) => {
     try {
-      console.log("Loading work from Firestore...");
       const snapshot = await getDocs(collection(db, "employeeWork", empId, "calls"));
       const work = snapshot.docs
         .map((doc, index) => {
@@ -87,6 +87,7 @@ function Employee() {
             id: Number(data.id) || index + 1,
             name: data.name || "",
             gender: data.gender || "",
+            city: data.city || "",
             contact: data.contact || "",
             callTime: data.callTime || "",
             response: data.response || "",
@@ -94,7 +95,6 @@ function Employee() {
         })
         .sort((a, b) => a.id - b.id);
 
-      console.log(`Loaded ${work.length} records from Firestore.`);
       setData(work);
       saveToLocalStorage(work);
     } catch (err) {
@@ -103,7 +103,7 @@ function Employee() {
     }
   };
 
-  // Employee login process
+  // Login
   const handleLogin = async () => {
     try {
       const snapshot = await getDocs(collection(db, "employees"));
@@ -130,10 +130,8 @@ function Employee() {
 
         logDocIdRef.current = logDoc.id;
 
-        // Try restoring local work first
         const localData = loadFromLocalStorage();
         if (localData.length > 0) {
-          console.log("Loaded data from local storage.");
           setData(localData);
         } else {
           await loadWorkFromFirestore(found.id);
@@ -147,7 +145,6 @@ function Employee() {
     }
   };
 
-  // Restore session if browser reloads
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("employeeLoggedIn") === "true";
     const details = localStorage.getItem("employeeDetails");
@@ -159,7 +156,6 @@ function Employee() {
 
       const localData = loadFromLocalStorage();
       if (localData.length > 0) {
-        console.log("Restored data from local storage on reload.");
         setData(localData);
       } else {
         loadWorkFromFirestore(parsedDetails.id);
@@ -167,7 +163,6 @@ function Employee() {
     }
   }, []);
 
-  // Logout: clear session + local data (NOT Firestore data)
   const handleLogout = async () => {
     if (empDetails && logDocIdRef.current) {
       try {
@@ -188,10 +183,8 @@ function Employee() {
     localStorage.removeItem("employeeLoggedIn");
     localStorage.removeItem("employeeDetails");
     localStorage.removeItem(LOCAL_STORAGE_KEY);
-    console.log("Employee logged out. Local data cleared. Firestore data remains intact.");
   };
 
-  // Handle Excel file upload
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file || !empDetails) return;
@@ -208,6 +201,7 @@ function Employee() {
           id: index + 1,
           name: row.name || "",
           gender: row.gender || "",
+          city: row.city || "",
           contact: row.contact || "",
           callTime: row.callTime || "",
           response: row.response || "",
@@ -226,7 +220,6 @@ function Employee() {
     reader.readAsBinaryString(file);
   };
 
-  // Handle call button: mark time + clipboard
   const handleCallClick = async (index) => {
     const updated = [...data];
     updated[index].callTime = format(new Date(), "yyyy-MM-dd HH:mm:ss");
@@ -247,7 +240,6 @@ function Employee() {
     }
   };
 
-  // Handle response dropdown
   const handleResponseChange = async (index, value) => {
     const updated = [...data];
     updated[index].response = value;
@@ -256,7 +248,22 @@ function Employee() {
     await saveWorkToFirestore(empDetails.id, updated);
   };
 
-  // Export data to Excel
+  const handleEdit = async (index) => {
+    const updated = [...data];
+    const name = prompt("Edit Name", updated[index].name);
+    const gender = prompt("Edit Gender", updated[index].gender);
+    const city = prompt("Edit City", updated[index].city);
+    const contact = prompt("Edit Contact", updated[index].contact);
+    if (name !== null) updated[index].name = name;
+    if (gender !== null) updated[index].gender = gender;
+    if (city !== null) updated[index].city = city;
+    if (contact !== null) updated[index].contact = contact;
+
+    setData(updated);
+    saveToLocalStorage(updated);
+    await saveWorkToFirestore(empDetails.id, updated);
+  };
+
   const exportToExcel = () => {
     if (data.length === 0) return;
     const ws = XLSX.utils.json_to_sheet(data);
@@ -265,7 +272,6 @@ function Employee() {
     XLSX.writeFile(wb, "call_data.xlsx");
   };
 
-  // Clean data (also in Firestore) after export
   const cleanData = async () => {
     if (!empDetails) return;
     const confirmed = window.confirm("This will export and delete all current work. Proceed?");
@@ -279,7 +285,6 @@ function Employee() {
         deleteDoc(doc(db, "employeeWork", empDetails.id, "calls", docSnap.id))
       );
       await Promise.all(deletions);
-      console.log("Data cleaned from Firestore.");
 
       setData([]);
       localStorage.removeItem(LOCAL_STORAGE_KEY);
@@ -289,6 +294,12 @@ function Employee() {
       alert("Error cleaning data.");
     }
   };
+
+  const filteredData = data.filter(
+    (row) =>
+      (!genderFilter || row.gender.toLowerCase() === genderFilter.toLowerCase()) &&
+      (!responseFilter || row.response.toLowerCase().includes(responseFilter.toLowerCase()))
+  );
 
   if (!loggedIn) {
     return (
@@ -322,19 +333,11 @@ function Employee() {
     <div className="employee-container">
       <div className="employee-header">
         <h1 className="portal-title">Employee Call Portal</h1>
-        <button onClick={handleLogout} className="logout-button">
-          Logout
-        </button>
+        <button onClick={handleLogout} className="logout-button">Logout</button>
       </div>
 
       <p className="welcome-message">Welcome, {empDetails?.name}</p>
-
-      <input
-        type="file"
-        accept=".xlsx, .xls"
-        onChange={handleFileUpload}
-        className="file-input"
-      />
+      <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} className="file-input" />
 
       {data.length > 0 && (
         <>
@@ -344,19 +347,40 @@ function Employee() {
                 <tr>
                   <th>ID</th>
                   <th>Name</th>
-                  <th>Gender</th>
+                  <th>Gender
+                    <select
+                      value={genderFilter}
+                      onChange={(e) => setGenderFilter(e.target.value)}
+                      className="filter-select"
+                    >
+                      <option value="">All</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                  </th>
+                  <th>City</th>
                   <th>Contact</th>
                   <th>Call</th>
                   <th>Call Time</th>
-                  <th>Response</th>
+                  <th>Response
+                    <input
+                      type="text"
+                      value={responseFilter}
+                      onChange={(e) => setResponseFilter(e.target.value)}
+                      className="filter-input"
+                      placeholder="Filter"
+                    />
+                  </th>
+                  <th>Edit</th>
                 </tr>
               </thead>
               <tbody>
-                {data.map((row, index) => (
+                {filteredData.map((row, index) => (
                   <tr key={index}>
                     <td>{row.id}</td>
                     <td>{row.name}</td>
                     <td>{row.gender}</td>
+                    <td>{row.city}</td>
                     <td>{row.contact}</td>
                     <td>
                       <button onClick={() => handleCallClick(index)} className="call-button">
@@ -365,18 +389,23 @@ function Employee() {
                     </td>
                     <td>{row.callTime}</td>
                     <td>
-                      <select
+                      <input
+                        list="responseOptions"
                         value={row.response || ""}
                         onChange={(e) => handleResponseChange(index, e.target.value)}
                         className="response-select"
-                      >
-                        <option value="">Select</option>
-                        {responseOptions.map((option, i) => (
-                          <option key={i} value={option}>
-                            {option}
-                          </option>
+                        placeholder="Type or select"
+                      />
+                      <datalist id="responseOptions">
+                        {responseOptions.map((opt, i) => (
+                          <option key={i} value={opt} />
                         ))}
-                      </select>
+                      </datalist>
+                    </td>
+                    <td>
+                      <button onClick={() => handleEdit(index)} className="edit-button">
+                        Edit
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -385,12 +414,8 @@ function Employee() {
           </div>
 
           <div className="export-section">
-            <button onClick={exportToExcel} className="export-button">
-              Export to Excel
-            </button>
-            <button onClick={cleanData} className="clean-button">
-              Clean Data
-            </button>
+            <button onClick={exportToExcel} className="export-button">Export to Excel</button>
+            <button onClick={cleanData} className="clean-button">Clean Data</button>
           </div>
         </>
       )}
