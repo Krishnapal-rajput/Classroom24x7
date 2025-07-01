@@ -139,7 +139,7 @@ const Home = () => {
       <section id="courses" className="section gray-bg">
         <h2>Our Courses</h2>
         <div className="card-grid">
-          {Array.from({ length: 12 }).map((_, i) => (
+          {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="card">
               <img
                 src={`https://placehold.co/250x150?text=Course+${i + 1}`}
