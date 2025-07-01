@@ -14,7 +14,7 @@ import {
 import { db } from "./firebaseConfig";
 import "./Employee.css";
 
-const responseOptions = ["Interested", "Not Interested", "Call Later", "Wrong Number"];
+const responseOptions = ["Interested", "Not Interested", "Call Later", "Wrong Number", "Other"];
 const LOCAL_STORAGE_KEY = "employeeCallData";
 
 const saveToLocalStorage = (data) => {
@@ -33,11 +33,12 @@ function Employee() {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [empDetails, setEmpDetails] = useState(null);
+  const [genderFilter, setGenderFilter] = useState("");
+  const [responseFilter, setResponseFilter] = useState("");
   const logDocIdRef = useRef(null);
 
-  // Save data to Firestore under employeeWork/{empId}/calls
+  // Save call work data to Firestore in batch
   const saveWorkToFirestore = async (empId, workData) => {
-    console.log("Saving work to Firestore...");
     const callsCollection = collection(db, "employeeWork", empId, "calls");
     const snapshot = await getDocs(callsCollection);
 
@@ -50,11 +51,13 @@ function Employee() {
     });
 
     const batch = writeBatch(db);
+
     workData.forEach((row) => {
       const updatedDoc = {
         id: Number(row.id) || 0,
         name: row.name || "",
         gender: row.gender || "",
+        city: row.city || "",
         contact: row.contact || "",
         callTime: row.callTime || "",
         response: row.response || "",
@@ -72,13 +75,11 @@ function Employee() {
     });
 
     await batch.commit();
-    console.log("Work saved to Firestore.");
   };
 
-  // Load work data from Firestore when employee logs in
+  // Load call work data from Firestore
   const loadWorkFromFirestore = async (empId) => {
     try {
-      console.log("Loading work from Firestore...");
       const snapshot = await getDocs(collection(db, "employeeWork", empId, "calls"));
       const work = snapshot.docs
         .map((doc, index) => {
@@ -87,6 +88,7 @@ function Employee() {
             id: Number(data.id) || index + 1,
             name: data.name || "",
             gender: data.gender || "",
+            city: data.city || "",
             contact: data.contact || "",
             callTime: data.callTime || "",
             response: data.response || "",
@@ -94,7 +96,6 @@ function Employee() {
         })
         .sort((a, b) => a.id - b.id);
 
-      console.log(`Loaded ${work.length} records from Firestore.`);
       setData(work);
       saveToLocalStorage(work);
     } catch (err) {
@@ -103,7 +104,20 @@ function Employee() {
     }
   };
 
-  // Employee login process
+  // Auto-login from local storage
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("employeeLoggedIn") === "true";
+    const details = localStorage.getItem("employeeDetails");
+
+    if (isLoggedIn && details) {
+      const parsedDetails = JSON.parse(details);
+      setLoggedIn(true);
+      setEmpDetails(parsedDetails);
+      loadWorkFromFirestore(parsedDetails.id);
+    }
+  }, []);
+
+  // Employee login
   const handleLogin = async () => {
     try {
       const snapshot = await getDocs(collection(db, "employees"));
@@ -129,15 +143,7 @@ function Employee() {
         });
 
         logDocIdRef.current = logDoc.id;
-
-        // Try restoring local work first
-        const localData = loadFromLocalStorage();
-        if (localData.length > 0) {
-          console.log("Loaded data from local storage.");
-          setData(localData);
-        } else {
-          await loadWorkFromFirestore(found.id);
-        }
+        await loadWorkFromFirestore(found.id);
       } else {
         setLoginError("Invalid username or password.");
       }
@@ -147,27 +153,6 @@ function Employee() {
     }
   };
 
-  // Restore session if browser reloads
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("employeeLoggedIn") === "true";
-    const details = localStorage.getItem("employeeDetails");
-
-    if (isLoggedIn && details) {
-      const parsedDetails = JSON.parse(details);
-      setLoggedIn(true);
-      setEmpDetails(parsedDetails);
-
-      const localData = loadFromLocalStorage();
-      if (localData.length > 0) {
-        console.log("Restored data from local storage on reload.");
-        setData(localData);
-      } else {
-        loadWorkFromFirestore(parsedDetails.id);
-      }
-    }
-  }, []);
-
-  // Logout: clear session + local data (NOT Firestore data)
   const handleLogout = async () => {
     if (empDetails && logDocIdRef.current) {
       try {
@@ -183,15 +168,10 @@ function Employee() {
     setUsername("");
     setPassword("");
     setEmpDetails(null);
-    setData([]);
-    logDocIdRef.current = null;
     localStorage.removeItem("employeeLoggedIn");
     localStorage.removeItem("employeeDetails");
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
-    console.log("Employee logged out. Local data cleared. Firestore data remains intact.");
   };
 
-  // Handle Excel file upload
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file || !empDetails) return;
@@ -208,6 +188,7 @@ function Employee() {
           id: index + 1,
           name: row.name || "",
           gender: row.gender || "",
+          city: row.city || "",
           contact: row.contact || "",
           callTime: row.callTime || "",
           response: row.response || "",
@@ -226,7 +207,6 @@ function Employee() {
     reader.readAsBinaryString(file);
   };
 
-  // Handle call button: mark time + clipboard
   const handleCallClick = async (index) => {
     const updated = [...data];
     updated[index].callTime = format(new Date(), "yyyy-MM-dd HH:mm:ss");
@@ -234,20 +214,14 @@ function Employee() {
     saveToLocalStorage(updated);
     await saveWorkToFirestore(empDetails.id, updated);
 
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (isMobile) {
-      window.location.href = `tel:${updated[index].contact}`;
-    } else {
-      try {
-        await navigator.clipboard.writeText(updated[index].contact);
-        alert("Contact copied to clipboard.");
-      } catch {
-        alert("Failed to copy contact.");
-      }
+    try {
+      await navigator.clipboard.writeText(updated[index].contact);
+      alert("Contact copied to clipboard.");
+    } catch {
+      alert("Failed to copy contact.");
     }
   };
 
-  // Handle response dropdown
   const handleResponseChange = async (index, value) => {
     const updated = [...data];
     updated[index].response = value;
@@ -256,7 +230,28 @@ function Employee() {
     await saveWorkToFirestore(empDetails.id, updated);
   };
 
-  // Export data to Excel
+  const handleCustomResponseChange = async (index, value) => {
+    const updated = [...data];
+    updated[index].response = value;
+    setData(updated);
+    saveToLocalStorage(updated);
+    await saveWorkToFirestore(empDetails.id, updated);
+  };
+
+  const handleUpdateRow = async (index) => {
+    const row = data[index];
+    const name = prompt("Update Name:", row.name) || row.name;
+    const gender = prompt("Update Gender:", row.gender) || row.gender;
+    const city = prompt("Update City:", row.city) || row.city;
+    const contact = prompt("Update Contact:", row.contact) || row.contact;
+
+    const updated = [...data];
+    updated[index] = { ...row, name, gender, city, contact };
+    setData(updated);
+    saveToLocalStorage(updated);
+    await saveWorkToFirestore(empDetails.id, updated);
+  };
+
   const exportToExcel = () => {
     if (data.length === 0) return;
     const ws = XLSX.utils.json_to_sheet(data);
@@ -265,7 +260,6 @@ function Employee() {
     XLSX.writeFile(wb, "call_data.xlsx");
   };
 
-  // Clean data (also in Firestore) after export
   const cleanData = async () => {
     if (!empDetails) return;
     const confirmed = window.confirm("This will export and delete all current work. Proceed?");
@@ -279,16 +273,23 @@ function Employee() {
         deleteDoc(doc(db, "employeeWork", empDetails.id, "calls", docSnap.id))
       );
       await Promise.all(deletions);
-      console.log("Data cleaned from Firestore.");
-
-      setData([]);
-      localStorage.removeItem(LOCAL_STORAGE_KEY);
-      alert("Data cleaned successfully. You can now upload a new file.");
     } catch (err) {
       console.error("Failed to clean data:", err);
       alert("Error cleaning data.");
+      return;
     }
+
+    setData([]);
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    alert("Data cleaned successfully. You can now upload a new file.");
   };
+
+  // Filter data
+  const filteredData = data.filter(
+    (row) =>
+      (!genderFilter || row.gender === genderFilter) &&
+      (!responseFilter || row.response === responseFilter)
+  );
 
   if (!loggedIn) {
     return (
@@ -297,22 +298,16 @@ function Employee() {
         <input
           type="text"
           placeholder="Username"
-          className="login-input"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          autoComplete="username"
         />
         <input
           type="password"
           placeholder="Password"
-          className="login-input"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
         />
-        <button onClick={handleLogin} className="login-button">
-          Login
-        </button>
+        <button onClick={handleLogin}>Login</button>
         {loginError && <p className="login-error">{loginError}</p>}
       </div>
     );
@@ -321,79 +316,74 @@ function Employee() {
   return (
     <div className="employee-container">
       <div className="employee-header">
-        <h1 className="portal-title">Employee Call Portal</h1>
-        <button onClick={handleLogout} className="logout-button">
-          Logout
-        </button>
+        <h1>Employee Call Portal</h1>
+        <button onClick={handleLogout}>Logout</button>
       </div>
 
-      <p className="welcome-message">Welcome, {empDetails?.name}</p>
+      <div className="filters">
+        <select value={genderFilter} onChange={(e) => setGenderFilter(e.target.value)}>
+          <option value="">All Genders</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
 
-      <input
-        type="file"
-        accept=".xlsx, .xls"
-        onChange={handleFileUpload}
-        className="file-input"
-      />
+        <select value={responseFilter} onChange={(e) => setResponseFilter(e.target.value)}>
+          <option value="">All Responses</option>
+          {responseOptions.map((opt, i) => (
+            <option key={i} value={opt}>{opt}</option>
+          ))}
+        </select>
+      </div>
 
-      {data.length > 0 && (
-        <>
-          <div className="table-wrapper">
-            <table className="call-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Gender</th>
-                  <th>Contact</th>
-                  <th>Call</th>
-                  <th>Call Time</th>
-                  <th>Response</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((row, index) => (
-                  <tr key={index}>
-                    <td>{row.id}</td>
-                    <td>{row.name}</td>
-                    <td>{row.gender}</td>
-                    <td>{row.contact}</td>
-                    <td>
-                      <button onClick={() => handleCallClick(index)} className="call-button">
-                        Call
-                      </button>
-                    </td>
-                    <td>{row.callTime}</td>
-                    <td>
-                      <select
-                        value={row.response || ""}
-                        onChange={(e) => handleResponseChange(index, e.target.value)}
-                        className="response-select"
-                      >
-                        <option value="">Select</option>
-                        {responseOptions.map((option, i) => (
-                          <option key={i} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
 
-          <div className="export-section">
-            <button onClick={exportToExcel} className="export-button">
-              Export to Excel
-            </button>
-            <button onClick={cleanData} className="clean-button">
-              Clean Data
-            </button>
-          </div>
-        </>
-      )}
+      <div className="table-wrapper">
+        <table className="call-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Name</th><th>Gender</th><th>City</th><th>Contact</th>
+              <th>Call</th><th>Call Time</th><th>Response</th><th>Edit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredData.map((row, index) => (
+              <tr key={index}>
+                <td>{row.id}</td>
+                <td>{row.name}</td>
+                <td>{row.gender}</td>
+                <td>{row.city}</td>
+                <td>{row.contact}</td>
+                <td><button onClick={() => handleCallClick(index)}>Call</button></td>
+                <td>{row.callTime}</td>
+                <td>
+                  <select
+                    value={responseOptions.includes(row.response) ? row.response : "Other"}
+                    onChange={(e) => handleResponseChange(index, e.target.value)}
+                  >
+                    <option value="">Select</option>
+                    {responseOptions.map((opt, i) => (
+                      <option key={i} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                  {row.response && !responseOptions.includes(row.response) && (
+                    <input
+                      type="text"
+                      value={row.response}
+                      onChange={(e) => handleCustomResponseChange(index, e.target.value)}
+                    />
+                  )}
+                </td>
+                <td><button onClick={() => handleUpdateRow(index)}>Edit</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="export-section">
+        <button onClick={exportToExcel}>Export to Excel</button>
+        <button onClick={cleanData}>Clean Data</button>
+      </div>
     </div>
   );
 }
