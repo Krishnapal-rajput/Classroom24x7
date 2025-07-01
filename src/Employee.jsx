@@ -35,8 +35,9 @@ function Employee() {
   const [empDetails, setEmpDetails] = useState(null);
   const logDocIdRef = useRef(null);
 
-  // Save call work data to Firestore in batch
+  // Save data to Firestore under employeeWork/{empId}/calls
   const saveWorkToFirestore = async (empId, workData) => {
+    console.log("Saving work to Firestore...");
     const callsCollection = collection(db, "employeeWork", empId, "calls");
     const snapshot = await getDocs(callsCollection);
 
@@ -49,7 +50,6 @@ function Employee() {
     });
 
     const batch = writeBatch(db);
-
     workData.forEach((row) => {
       const updatedDoc = {
         id: Number(row.id) || 0,
@@ -72,11 +72,13 @@ function Employee() {
     });
 
     await batch.commit();
+    console.log("Work saved to Firestore.");
   };
 
-  // Load call work data from Firestore
+  // Load work data from Firestore when employee logs in
   const loadWorkFromFirestore = async (empId) => {
     try {
+      console.log("Loading work from Firestore...");
       const snapshot = await getDocs(collection(db, "employeeWork", empId, "calls"));
       const work = snapshot.docs
         .map((doc, index) => {
@@ -92,6 +94,7 @@ function Employee() {
         })
         .sort((a, b) => a.id - b.id);
 
+      console.log(`Loaded ${work.length} records from Firestore.`);
       setData(work);
       saveToLocalStorage(work);
     } catch (err) {
@@ -100,26 +103,7 @@ function Employee() {
     }
   };
 
-  // Auto-login on page refresh
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("employeeLoggedIn") === "true";
-    const details = localStorage.getItem("employeeDetails");
-    const localData = loadFromLocalStorage();
-
-    if (isLoggedIn && details) {
-      const parsedDetails = JSON.parse(details);
-      setLoggedIn(true);
-      setEmpDetails(parsedDetails);
-
-      if (localData.length > 0) {
-        setData(localData);
-      } else {
-        loadWorkFromFirestore(parsedDetails.id);
-      }
-    }
-  }, []);
-
-  // Employee login
+  // Employee login process
   const handleLogin = async () => {
     try {
       const snapshot = await getDocs(collection(db, "employees"));
@@ -146,7 +130,14 @@ function Employee() {
 
         logDocIdRef.current = logDoc.id;
 
-        await loadWorkFromFirestore(found.id);
+        // Try restoring local work first
+        const localData = loadFromLocalStorage();
+        if (localData.length > 0) {
+          console.log("Loaded data from local storage.");
+          setData(localData);
+        } else {
+          await loadWorkFromFirestore(found.id);
+        }
       } else {
         setLoginError("Invalid username or password.");
       }
@@ -156,7 +147,27 @@ function Employee() {
     }
   };
 
-  // Employee logout
+  // Restore session if browser reloads
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("employeeLoggedIn") === "true";
+    const details = localStorage.getItem("employeeDetails");
+
+    if (isLoggedIn && details) {
+      const parsedDetails = JSON.parse(details);
+      setLoggedIn(true);
+      setEmpDetails(parsedDetails);
+
+      const localData = loadFromLocalStorage();
+      if (localData.length > 0) {
+        console.log("Restored data from local storage on reload.");
+        setData(localData);
+      } else {
+        loadWorkFromFirestore(parsedDetails.id);
+      }
+    }
+  }, []);
+
+  // Logout: clear session + local data (NOT Firestore data)
   const handleLogout = async () => {
     if (empDetails && logDocIdRef.current) {
       try {
@@ -177,6 +188,7 @@ function Employee() {
     localStorage.removeItem("employeeLoggedIn");
     localStorage.removeItem("employeeDetails");
     localStorage.removeItem(LOCAL_STORAGE_KEY);
+    console.log("Employee logged out. Local data cleared. Firestore data remains intact.");
   };
 
   // Handle Excel file upload
@@ -214,7 +226,7 @@ function Employee() {
     reader.readAsBinaryString(file);
   };
 
-  // Handle call click
+  // Handle call button: mark time + clipboard
   const handleCallClick = async (index) => {
     const updated = [...data];
     updated[index].callTime = format(new Date(), "yyyy-MM-dd HH:mm:ss");
@@ -235,7 +247,7 @@ function Employee() {
     }
   };
 
-  // Handle response change
+  // Handle response dropdown
   const handleResponseChange = async (index, value) => {
     const updated = [...data];
     updated[index].response = value;
@@ -244,7 +256,7 @@ function Employee() {
     await saveWorkToFirestore(empDetails.id, updated);
   };
 
-  // Export to Excel
+  // Export data to Excel
   const exportToExcel = () => {
     if (data.length === 0) return;
     const ws = XLSX.utils.json_to_sheet(data);
@@ -253,7 +265,7 @@ function Employee() {
     XLSX.writeFile(wb, "call_data.xlsx");
   };
 
-  // Clean data
+  // Clean data (also in Firestore) after export
   const cleanData = async () => {
     if (!empDetails) return;
     const confirmed = window.confirm("This will export and delete all current work. Proceed?");
@@ -267,18 +279,17 @@ function Employee() {
         deleteDoc(doc(db, "employeeWork", empDetails.id, "calls", docSnap.id))
       );
       await Promise.all(deletions);
+      console.log("Data cleaned from Firestore.");
+
+      setData([]);
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+      alert("Data cleaned successfully. You can now upload a new file.");
     } catch (err) {
       console.error("Failed to clean data:", err);
       alert("Error cleaning data.");
-      return;
     }
-
-    setData([]);
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
-    alert("Data cleaned successfully. You can now upload a new file.");
   };
 
-  // UI
   if (!loggedIn) {
     return (
       <div className="login-container">
