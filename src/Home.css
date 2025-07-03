@@ -81,6 +81,7 @@ body, html {
 }
 
 /* Hero section with typewriter animation */
+/* Hero section with typewriter animation */
 .hero {
   background: #2563eb;
   color: #fff;
@@ -101,7 +102,7 @@ body, html {
   overflow: hidden;
 }
 
-/* Each animated line - new robust slow animation */
+/* Shared style for all lines */
 .hero-animation span {
   position: absolute;
   top: 0;
@@ -113,58 +114,60 @@ body, html {
   opacity: 0;
 }
 
+/* Line 1 */
 .hero-animation span:nth-child(1) {
-  animation:
-    show 0s forwards 0s,
-    typing 6s steps(40, end) forwards 0s,
-    blinkCursor 1s step-end infinite 0s,
-    fadeOut 1.5s forwards 8s;
+  animation-name: typing, blinkCursor, fadeOut;
+  animation-duration: 4s, 0.8s, 1s;
+  animation-timing-function: steps(30, end), step-end, ease;
+  animation-delay: 0s, 0s, 4s;
+  animation-iteration-count: 1, infinite, 1;
+  animation-fill-mode: forwards, none, forwards;
 }
+
+/* Line 2 */
 .hero-animation span:nth-child(2) {
-  animation:
-    show 0s forwards 10s,
-    typing 6s steps(40, end) forwards 10s,
-    blinkCursor 1s step-end infinite 10s,
-    fadeOut 1.5s forwards 18s;
+  animation-name: typing, blinkCursor, fadeOut;
+  animation-duration: 4s, 0.8s, 1s;
+  animation-timing-function: steps(30, end), step-end, ease;
+  animation-delay: 5s, 5s, 9s;
+  animation-iteration-count: 1, infinite, 1;
+  animation-fill-mode: forwards, none, forwards;
 }
+
+/* Line 3 */
 .hero-animation span:nth-child(3) {
-  animation:
-    show 0s forwards 20s,
-    typing 6s steps(40, end) forwards 20s,
-    blinkCursor 1s step-end infinite 20s,
-    fadeOut 1.5s forwards 28s;
+  animation-name: typing, blinkCursor, fadeOut;
+  animation-duration: 4s, 0.8s, 1s;
+  animation-timing-function: steps(30, end), step-end, ease;
+  animation-delay: 10s, 10s, 14s;
+  animation-iteration-count: 1, infinite, 1;
+  animation-fill-mode: forwards, none, forwards;
 }
+
+/* Line 4 */
 .hero-animation span:nth-child(4) {
-  animation:
-    show 0s forwards 30s,
-    typing 6s steps(40, end) forwards 30s,
-    blinkCursor 1s step-end infinite 30s,
-    fadeOut 1.5s forwards 38s;
+  animation-name: typing, blinkCursor, fadeOut;
+  animation-duration: 4s, 0.8s, 1s;
+  animation-timing-function: steps(30, end), step-end, ease;
+  animation-delay: 15s, 15s, 19s;
+  animation-iteration-count: 1, infinite, 1;
+  animation-fill-mode: forwards, none, forwards;
 }
 
-@keyframes show {
-  to { opacity: 1; }
-}
-
+/* Keyframes */
 @keyframes typing {
-  from { width: 0; }
-  to   { width: 100%; }
+  from { width: 0; opacity: 1; }
+  to   { width: 100%; opacity: 1; }
 }
-
 @keyframes fadeOut {
   to { opacity: 0; }
 }
-
 @keyframes blinkCursor {
   from, to { border-color: transparent; }
   50%      { border-color: #fff; }
 }
 
-.hero-animation span {
-  animation-iteration-count: infinite;
-}
-
-/* Responsive hero font */
+/* Responsive font sizes */
 @media (min-width: 640px) {
   .hero-animation { font-size: 2.5rem; }
 }
