@@ -37,10 +37,10 @@ const Home = () => {
   useEffect(() => {
     // Typewriter text rotation
     const lines = [
-      "Download the app from Play Store",
-      "→ Click on Demo",
-      "→ Take Demo",
-      "→ Purchase Course!"
+      "Download the app from Play Store →",
+      "Click on Demo →",
+      "Take Demo →",
+      "Purchase Course!"
     ];
     let i = 0;
     const el = document.getElementById("typewriter");
