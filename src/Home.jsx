@@ -38,9 +38,9 @@ const Home = () => {
     // Typewriter text rotation
     const lines = [
       "Download the app from Play Store",
-      "Click on Demo",
-      "Take Demo",
-      "Purchase Course!"
+      "→ Click on Demo",
+      "→ Take Demo",
+      "→ Purchase Course!"
     ];
     let i = 0;
     const el = document.getElementById("typewriter");
@@ -141,8 +141,8 @@ const Home = () => {
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="card">
               <img
-                src={https://placehold.co/250x150?text=Course+${i + 1}}
-                alt={Course ${i + 1}}
+                src={`https://placehold.co/250x150?text=Course+${i + 1}`}
+                alt={`Course ${i + 1}`}
               />
               <button
                 onClick={() =>
@@ -167,7 +167,7 @@ const Home = () => {
             <img
               key={i}
               src="https://img.freepik.com/free-photo/happy-business-man_23-2148018673.jpg"
-              alt={Gallery ${i + 1}}
+              alt={`Gallery ${i + 1}`}
               className="gallery-img"
             />
           ))}
@@ -198,8 +198,8 @@ const Home = () => {
           ].map((member, idx) => (
             <div key={idx} className="card">
               <img
-                src={https://avatar.iran.liara.run/public/${member.gender}}
-                alt={${member.name} avatar}
+                src={`https://avatar.iran.liara.run/public/${member.gender}`}
+                alt={`${member.name} avatar`}
                 className="avatar"
               />
               <h4>{member.name}</h4>
