@@ -24,7 +24,7 @@
 
 /* Hero */ .hero { background: #2563eb; color: #fff; padding: 4rem 1rem; text-align: center; font-weight: bold; min-height: 180px; display: flex; justify-content: center; align-items: center; }
 
-.hero-animation { font-size: 2rem; border-right: 2px solid white; white-space: nowrap; overflow: hidden; width: 0; animation: typing 3s steps(40, end) infinite, blink 0.75s step-end infinite; }
+.hero-animation { font-size: 2rem; border-right: 2px solid white; white-space: nowrap; overflow: hidden; width: 0; animation: typing 10s steps(40, end) infinite, blink 0.75s step-end infinite; }
 
 @keyframes typing { 0% { width: 0; } 40% { width: 100%; } 60% { width: 100%; } 100% { width: 0; } }
 
