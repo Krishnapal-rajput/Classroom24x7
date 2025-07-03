@@ -80,7 +80,7 @@ body, html {
   display: none;
 }
 
-/* Hero section with JS-based typewriter */
+/* HERO with TYPEWRITER EFFECT */
 .hero {
   background: #2563eb;
   color: #fff;
@@ -94,17 +94,40 @@ body, html {
 }
 
 .hero-animation {
-  font-size: 1.5rem;
-  white-space: nowrap;
+  display: inline-block;
+  height: 2.5rem;
+  position: relative;
   overflow: hidden;
-  border-right: 2px solid white;
-  animation: blinkCursor 0.8s step-end infinite;
 }
 
-/* Cursor blink animation only */
-@keyframes blinkCursor {
-  from, to { border-color: transparent; }
-  50% { border-color: white; }
+.hero-animation span {
+  position: absolute;
+  white-space: nowrap;
+  width: 0;
+  opacity: 0;
+  animation: typing 3.5s steps(30, end) forwards,
+             fade 1s ease 3.5s forwards;
+}
+
+.hero-animation span:nth-child(1) {
+  animation-delay: 0s, 3.5s;
+}
+.hero-animation span:nth-child(2) {
+  animation-delay: 4.5s, 8s;
+}
+.hero-animation span:nth-child(3) {
+  animation-delay: 9s, 12.5s;
+}
+.hero-animation span:nth-child(4) {
+  animation-delay: 13.5s, 17s;
+}
+
+@keyframes typing {
+  from { width: 0; opacity: 1; }
+  to   { width: 100%; opacity: 1; }
+}
+@keyframes fade {
+  to { opacity: 0; }
 }
 
 @media (min-width: 640px) {
