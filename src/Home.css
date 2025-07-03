@@ -101,34 +101,41 @@ body, html {
   overflow: hidden;
 }
 
-/* Each animated line */
+/* Each animated line - new robust animation chaining */
 .hero-animation span {
   position: absolute;
   top: 0;
   left: 0;
   white-space: nowrap;
   overflow: hidden;
-  border-right: 2px solid #fff; /* cursor */
+  border-right: 2px solid #fff;
   width: 0;
   opacity: 0;
-  animation:
-    typing 4s steps(30, end) forwards,
-    blinkCursor 0.8s step-end infinite,
-    fadeOut 1s 4s forwards;
 }
 
-/* Stagger each line with delays */
 .hero-animation span:nth-child(1) {
-  animation-delay: 0s, 0s, 4s;
+  animation:
+    typing 4s steps(30, end) forwards 0s,
+    blinkCursor 0.8s step-end infinite 0s,
+    fadeOut 1s forwards 4s;
 }
 .hero-animation span:nth-child(2) {
-  animation-delay: 5s, 5s, 9s;
+  animation:
+    typing 4s steps(30, end) forwards 5s,
+    blinkCursor 0.8s step-end infinite 5s,
+    fadeOut 1s forwards 9s;
 }
 .hero-animation span:nth-child(3) {
-  animation-delay: 10s,10s,14s;
+  animation:
+    typing 4s steps(30, end) forwards 10s,
+    blinkCursor 0.8s step-end infinite 10s,
+    fadeOut 1s forwards 14s;
 }
 .hero-animation span:nth-child(4) {
-  animation-delay:15s,15s,19s;
+  animation:
+    typing 4s steps(30, end) forwards 15s,
+    blinkCursor 0.8s step-end infinite 15s,
+    fadeOut 1s forwards 19s;
 }
 
 /* Typewriting keyframes */
@@ -145,11 +152,6 @@ body, html {
 @keyframes blinkCursor {
   from, to { border-color: transparent; }
   50%      { border-color: #fff; }
-}
-
-/* Infinite loop on each line animation */
-.hero-animation span {
-  animation-iteration-count: infinite;
 }
 
 /* Responsive hero font */
