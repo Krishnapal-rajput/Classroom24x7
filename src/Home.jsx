@@ -4,45 +4,57 @@ import { collection, addDoc, Timestamp } from "firebase/firestore";
 import "./Home.css";
 
 const Home = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    contact: "",
-    gender: "",
-  });
+  const [formData, setFormData] = useState({ name: "", contact: "", gender: "" });
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
+    // Menu toggle
     const toggleMenu = () => {
       document.getElementById("nav-menu")?.classList.toggle("hidden");
     };
     window.toggleMenu = toggleMenu;
 
+    // Scroll active links
     const handleScroll = () => {
       const navLinks = document.querySelectorAll("nav a");
       const fromTop = window.scrollY;
-
       navLinks.forEach((link) => {
         const href = link.getAttribute("href");
-        if (!href || !href.startsWith("#")) return;
+        if (!href?.startsWith("#")) return;
         const section = document.querySelector(href);
         if (!section) return;
-        if (
-          section.offsetTop <= fromTop + 60 &&
-          section.offsetTop + section.offsetHeight > fromTop + 60
-        ) {
+        if (section.offsetTop <= fromTop + 60 &&
+            section.offsetTop + section.offsetHeight > fromTop + 60) {
           navLinks.forEach((l) => l.classList.remove("active-link"));
           link.classList.add("active-link");
         }
       });
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    // Typewriter text rotation
+    const lines = [
+      "Download the app from Play Store",
+      "Click on Demo",
+      "Take Demo",
+      "Purchase Course!"
+    ];
+    let i = 0;
+    const el = document.getElementById("typewriter");
+    el.textContent = lines[i];
+    const interval = setInterval(() => {
+      i = (i + 1) % lines.length;
+      el.textContent = lines[i];
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Form handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name === "contact") {
       const numericValue = value.replace(/\D/g, "");
       if (numericValue.length > 10) return;
@@ -51,35 +63,26 @@ const Home = () => {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
-
   const handlePaste = (e) => {
-    if (e.clipboardData) {
-      const paste = e.clipboardData.getData("text");
-      if (!/^\d{0,10}$/.test(paste)) {
-        e.preventDefault();
-        alert("Only numeric values up to 10 digits are allowed.");
-      }
+    const paste = e.clipboardData.getData("text");
+    if (!/^\d{0,10}$/.test(paste)) {
+      e.preventDefault();
+      alert("Only numeric values up to 10 digits are allowed.");
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!/^\d{10}$/.test(formData.contact)) {
       alert("Contact number must be exactly 10 digits.");
       return;
     }
-
     try {
-      const payload = {
+      await addDoc(collection(db, "userData"), {
         name: formData.name.trim(),
         contact: formData.contact.trim(),
         gender: formData.gender,
         createdAt: Timestamp.now(),
-      };
-
-      await addDoc(collection(db, "userData"), payload);
-
+      });
       setSubmitted(true);
       setFormData({ name: "", contact: "", gender: "" });
       setTimeout(() => setSubmitted(false), 3000);
@@ -91,7 +94,7 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      {/* Header & Navigation */}
+      {/* Header */}
       <header className="nav-header">
         <img
           src="https://github.com/Krishnapal-rajput/Classroom24x7-index/blob/main/logo/App%20icon%20Log%20512x512.jpg?raw=true"
@@ -112,12 +115,7 @@ const Home = () => {
 
       {/* Hero */}
       <section id="home" className="hero">
-        <div className="hero-animation">
-          <span>Download the app from Play Store</span>
-          <span>→ Click on Demo</span>
-          <span>→ Take Demo</span>
-          <span>→ Purchase Course!</span>
-        </div>
+        <span className="hero-animation" id="typewriter"></span>
       </section>
 
       {/* About */}
@@ -220,7 +218,6 @@ const Home = () => {
             type="text"
             name="name"
             placeholder="Name"
-            autoComplete="off"
             value={formData.name}
             onChange={handleChange}
             required
