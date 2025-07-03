@@ -99,20 +99,15 @@ body, html {
   font-size: 2rem; 
   white-space: nowrap; 
   overflow: hidden; 
-  animation: typing 6s steps(40, end) infinite, blink 0.75s step-end infinite; 
+  animation: lineAnimation 12s infinite; /* Adjusted duration for the entire cycle */
 }
 
-@keyframes typing { 
-  0% { width: 0; } 
-  20% { width: 100%; } 
-  25% { width: 100%; } 
-  30% { width: 0; } 
-  100% { width: 0; } 
-}
-
-@keyframes blink { 
-  0%, 100% { border-color: transparent; } 
-  50% { border-color: white; } 
+@keyframes lineAnimation { 
+  0%, 20% { opacity: 0; } /* Start with hidden */
+  25%, 45% { opacity: 1; } /* Show first line */
+  50%, 70% { opacity: 0; } /* Hide first line */
+  75%, 95% { opacity: 1; } /* Show second line */
+  100% { opacity: 0; } /* Hide second line */
 }
 
 @media (min-width: 640px) { 
