@@ -114,10 +114,13 @@ const Home = () => {
 
       {/* Hero */}
       <section id="home" className="hero">
-  <div className="hero-animation">
-    Download the app from Play Store → Click on Demo → Take Demo → Purchase Course!
-  </div>
-</section>
+        <div className="hero-animation">
+          <span>Download the app from Play Store</span><br />
+          <span>→ Click on Demo</span><br />
+          <span>→ Take Demo</span><br />
+          <span>→ Purchase Course!</span>
+        </div>
+      </section>
 
       {/* About */}
       <section className="section">
