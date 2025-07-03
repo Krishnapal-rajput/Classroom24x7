@@ -101,7 +101,7 @@ body, html {
   overflow: hidden;
 }
 
-/* Each animated line - new robust animation chaining */
+/* Each animated line - new robust slow animation */
 .hero-animation span {
   position: absolute;
   top: 0;
@@ -115,43 +115,53 @@ body, html {
 
 .hero-animation span:nth-child(1) {
   animation:
-    typing 4s steps(30, end) forwards 0s,
-    blinkCursor 0.8s step-end infinite 0s,
-    fadeOut 1s forwards 4s;
+    show 0s forwards 0s,
+    typing 6s steps(40, end) forwards 0s,
+    blinkCursor 1s step-end infinite 0s,
+    fadeOut 1.5s forwards 8s;
 }
 .hero-animation span:nth-child(2) {
   animation:
-    typing 4s steps(30, end) forwards 5s,
-    blinkCursor 0.8s step-end infinite 5s,
-    fadeOut 1s forwards 9s;
+    show 0s forwards 10s,
+    typing 6s steps(40, end) forwards 10s,
+    blinkCursor 1s step-end infinite 10s,
+    fadeOut 1.5s forwards 18s;
 }
 .hero-animation span:nth-child(3) {
   animation:
-    typing 4s steps(30, end) forwards 10s,
-    blinkCursor 0.8s step-end infinite 10s,
-    fadeOut 1s forwards 14s;
+    show 0s forwards 20s,
+    typing 6s steps(40, end) forwards 20s,
+    blinkCursor 1s step-end infinite 20s,
+    fadeOut 1.5s forwards 28s;
 }
 .hero-animation span:nth-child(4) {
   animation:
-    typing 4s steps(30, end) forwards 15s,
-    blinkCursor 0.8s step-end infinite 15s,
-    fadeOut 1s forwards 19s;
+    show 0s forwards 30s,
+    typing 6s steps(40, end) forwards 30s,
+    blinkCursor 1s step-end infinite 30s,
+    fadeOut 1.5s forwards 38s;
 }
 
-/* Typewriting keyframes */
+@keyframes show {
+  to { opacity: 1; }
+}
+
 @keyframes typing {
-  from { width: 0; opacity: 1; }
-  to   { width: 100%; opacity: 1; }
+  from { width: 0; }
+  to   { width: 100%; }
 }
 
 @keyframes fadeOut {
   to { opacity: 0; }
 }
 
-/* Cursor blink */
 @keyframes blinkCursor {
   from, to { border-color: transparent; }
   50%      { border-color: #fff; }
+}
+
+.hero-animation span {
+  animation-iteration-count: infinite;
 }
 
 /* Responsive hero font */
