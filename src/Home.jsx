@@ -37,7 +37,8 @@ const Home = () => {
   useEffect(() => {
     // Typewriter text rotation
     const lines = [
-      "Download the app from Play Store →",
+      "Go to Play Store →",
+      "Download the App →",
       "Click on Demo →",
       "Take Demo →",
       "Purchase Course!"
