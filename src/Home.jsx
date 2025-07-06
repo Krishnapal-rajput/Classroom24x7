@@ -195,7 +195,7 @@ const Home = () => {
         <h2>About Us</h2>
         <p><strong>Author:</strong> Jitendra Kumar Makvana</p>
         <p><strong>Our Teachers:</strong> Experienced professionals in IT, business, and creative fields.</p>
-        <p><strong>Partner Companies:</strong> TechEd Pvt Ltd, LearnPro, EduForce</p>
+{/*      <p><strong>Partner Companies:</strong> TechEd Pvt Ltd, LearnPro, EduForce</p> */}
 
         <div className="card-grid">
           {[
