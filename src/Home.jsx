@@ -117,6 +117,15 @@ const Home = () => {
       {/* Hero */}
       <section id="home" className="hero">
         <span className="hero-animation" id="typewriter"></span>
+        <div className="playstore-hero-btn">
+          <a href="https://play.google.com/store/apps/details?id=co.lenord.yfpfv" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+              alt="Get it on Google Play"
+              style={{ height: "60px", marginTop: "20px" }}
+            />
+          </a>
+        </div>
       </section>
 
       {/* About */}
@@ -249,6 +258,17 @@ const Home = () => {
         </form>
       </section>
 
+      {/* Floating Play Store Button (mobile only) */}
+      <div className="floating-playstore-btn">
+        <a href="https://play.google.com/store/apps/details?id=co.lenord.yfpfv" target="_blank" rel="noopener noreferrer">
+          <img
+            src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+            alt="Get it on Google Play"
+            style={{ height: "50px" }}
+          />
+        </a>
+      </div>
+
       {/* Footer */}
       <footer className="footer">
         <p>&copy; 2025 Classroom 24x7</p>
@@ -258,6 +278,15 @@ const Home = () => {
           <i className="fab fa-instagram"></i>
         </div>
         <p>Contact: +91-1234567890 | Address: New Delhi, India</p>
+        <div className="footer-play-btn">
+          <a href="https://play.google.com/store/apps/details?id=co.lenord.yfpfv" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+              alt="Get it on Google Play"
+              style={{ height: "50px", marginTop: "10px" }}
+            />
+          </a>
+        </div>
       </footer>
     </div>
   );
