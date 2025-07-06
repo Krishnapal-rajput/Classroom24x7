@@ -89,6 +89,7 @@ body, html {
   font-weight: bold;
   min-height: 180px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -101,7 +102,6 @@ body, html {
   animation: blinkCursor 0.8s step-end infinite;
 }
 
-/* Cursor blink animation only */
 @keyframes blinkCursor {
   from, to { border-color: transparent; }
   50% { border-color: white; }
@@ -296,4 +296,28 @@ body, html {
   gap: 1rem;
   font-size: 1.25rem;
   margin: 0.5rem 0;
+}
+
+/* ✅ Play Store Buttons */
+.playstore-hero-btn {
+  margin-top: 1rem;
+}
+
+.floating-playstore-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  display: none;
+}
+
+.footer-play-btn {
+  margin-top: 1rem;
+}
+
+/* Show floating button on mobile only */
+@media (max-width: 640px) {
+  .floating-playstore-btn {
+    display: block;
+  }
 }
