@@ -22,7 +22,7 @@ const AdminPanel = () => {
     password: "",
   });
 
-  // 📌 Centralized fetch functions so we can reuse after operations.
+  // 📌 Centralized fetch functions so we can reuse after operations
   const fetchUserData = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "userData"));
@@ -112,7 +112,7 @@ const AdminPanel = () => {
 
       const snapshot = await getDocs(collection(db, "employees"));
       const count = snapshot.docs.length;
-      const nextId = EMP${String(count + 1).padStart(2, "0")};
+      const nextId = `EMP${String(count + 1).padStart(2, "0")}`;
 
       await setDoc(doc(db, "employees", nextId), {
         empId: nextId,
