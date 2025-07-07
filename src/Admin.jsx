@@ -16,13 +16,33 @@ const AdminPanel = () => {
   const [userData, setUserData] = useState([]);
   const [employeeLogs, setEmployeeLogs] = useState([]);
   const [employees, setEmployees] = useState([]);
-  const [newEmp, setNewEmp] = useState({
-    name: "",
-    username: "",
-    password: "",
+  const [newEmp, setNewEmp] = useState(() => {
+    const saved = localStorage.getItem("admin_newEmp");
+    return saved ? JSON.parse(saved) : { name: "", username: "", password: "" };
   });
 
-  // 📌 Centralized fetch functions so we can reuse after operations
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
+
+  // ✅ Auth check to prevent logout on reload
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) {
+        window.location.href = "/admin-login";
+      } else {
+        setIsAuthChecked(true);
+        fetchUserData();
+        fetchEmployees();
+        fetchEmployeeLogs();
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Persist form state in localStorage
+  useEffect(() => {
+    localStorage.setItem("admin_newEmp", JSON.stringify(newEmp));
+  }, [newEmp]);
+
   const fetchUserData = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "userData"));
@@ -87,13 +107,6 @@ const AdminPanel = () => {
     }
   };
 
-  useEffect(() => {
-    fetchUserData();
-    fetchEmployees();
-    fetchEmployeeLogs();
-  }, []);
-
-  // Export JSON to Excel
   const exportToExcel = (data, fileName) => {
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
@@ -101,7 +114,6 @@ const AdminPanel = () => {
     XLSX.writeFile(workbook, `${fileName}.xlsx`);
   };
 
-  // Add employee
   const handleAddEmployee = async () => {
     try {
       const { name, username, password } = newEmp;
@@ -128,7 +140,6 @@ const AdminPanel = () => {
     }
   };
 
-  // Update employee
   const handleUpdateEmployee = async (id, updatedData) => {
     try {
       const empRef = doc(db, "employees", id);
@@ -139,7 +150,6 @@ const AdminPanel = () => {
     }
   };
 
-  // Delete employee
   const handleDeleteEmployee = async (id) => {
     try {
       await deleteDoc(doc(db, "employees", id));
@@ -149,7 +159,6 @@ const AdminPanel = () => {
     }
   };
 
-  // Fix login logs to Firestore timestamps
   const cleanLoginLogs = async () => {
     try {
       const logsRef = collection(db, "loginLogs");
@@ -176,7 +185,6 @@ const AdminPanel = () => {
     }
   };
 
-  // Reset login logs
   const resetLoginLogs = async () => {
     const confirmReset = window.confirm(
       "⚠️ This will permanently delete all employee login logs. Continue?"
@@ -197,7 +205,6 @@ const AdminPanel = () => {
     }
   };
 
-  // Clean user inquiries
   const cleanUserInquiries = async () => {
     const confirmClean = window.confirm(
       "⚠️ This will permanently delete all user inquiry data. Continue?"
@@ -222,15 +229,19 @@ const AdminPanel = () => {
     }
   };
 
-  // Admin logout
   const handleLogout = async () => {
     try {
       await auth.signOut();
+      localStorage.removeItem("admin_newEmp");
       window.location.href = "/admin-login";
     } catch (error) {
       console.error("Logout failed:", error);
     }
   };
+
+  if (!isAuthChecked) {
+    return <div>Loading admin panel...</div>;
+  }
 
   return (
     <div className="admin-container">
@@ -241,14 +252,11 @@ const AdminPanel = () => {
         </button>
       </div>
 
-      {/* User Data */}
+      {/* User Inquiries */}
       <div className="section">
         <div className="section-header">
           <h3>User Inquiries</h3>
-          <button
-            className="export-btn"
-            onClick={() => exportToExcel(userData, "UserInquiries")}
-          >
+          <button className="export-btn" onClick={() => exportToExcel(userData, "UserInquiries")}>
             Export Excel
           </button>
           <button className="export-btn" onClick={cleanUserInquiries}>
@@ -276,11 +284,7 @@ const AdminPanel = () => {
                     <td>{user.name}</td>
                     <td>{user.contact}</td>
                     <td>{user.gender}</td>
-                    <td>
-                      {user.createdAt
-                        ? new Date(user.createdAt).toLocaleString()
-                        : "N/A"}
-                    </td>
+                    <td>{user.createdAt ? new Date(user.createdAt).toLocaleString() : "N/A"}</td>
                   </tr>
                 ))
               )}
@@ -293,10 +297,7 @@ const AdminPanel = () => {
       <div className="section">
         <div className="section-header">
           <h3>Employee Login Logs</h3>
-          <button
-            className="export-btn"
-            onClick={() => exportToExcel(employeeLogs, "EmployeeLogs")}
-          >
+          <button className="export-btn" onClick={() => exportToExcel(employeeLogs, "EmployeeLogs")}>
             Export Excel
           </button>
           <button className="export-btn" onClick={cleanLoginLogs}>
@@ -334,7 +335,7 @@ const AdminPanel = () => {
         </div>
       </div>
 
-      {/* Employee Management */}
+      {/* Manage Employees */}
       <div className="section">
         <div className="section-header">
           <h3>Manage Employees</h3>
@@ -353,7 +354,7 @@ const AdminPanel = () => {
             onChange={(e) => setNewEmp({ ...newEmp, username: e.target.value })}
           />
           <input
-            type="text"
+            type="password"
             placeholder="Password"
             value={newEmp.password}
             onChange={(e) => setNewEmp({ ...newEmp, password: e.target.value })}
