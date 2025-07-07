@@ -22,7 +22,7 @@ const AdminPanel = () => {
     password: "",
   });
 
-  // 📌 Centralized fetch functions so we can reuse after operations
+  // 📌 Centralized fetch functions so we can reuse after operations.
   const fetchUserData = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "userData"));
