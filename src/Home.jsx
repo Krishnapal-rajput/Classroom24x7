@@ -175,10 +175,10 @@ const testimonials = [
 ];
 
 const achievements = [
-  { title: "5000+ App Downloads", image: "https://picsum.photos/id/1/150x100" },
+  { title: "5000+ App Downloads", image: "https://picsum.photos/id/1/150/100" },
   {
     title: "5.0 Star Play Store Rating",
-    image: "https://picsum.photos/id/2/150x100",
+    image: "https://picsum.photos/id/2/150/100",
   },
   { title: "200+ Hours Content", image: "https://picsum.photos/id/3/150/100" },
   { title: "10+ Subjects Taught", image: "https://picsum.photos/id/4/150/100" },
