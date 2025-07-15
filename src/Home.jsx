@@ -5,48 +5,203 @@ import "./Home.css";
 
 const faqs = [
   {
-    question: "How do I create an account on your platform?",
+    question: "What is Classroom 24x7 and how does it work?",
     answer:
-      "Click 'Sign Up' on the homepage, fill in your details, verify your email, and you're done!",
+      "Classroom 24x7 is an online education platform offering high-quality courses, demo lectures, study materials, and tests. You can learn anytime, anywhere with our smooth, interactive classes taught in both Hindi and English.",
   },
   {
-    question: "What payment methods do you accept?",
+    question: "Can anyone enroll in Classroom 24x7 courses?",
     answer:
-      "We accept Visa, MasterCard, PayPal, Apple Pay, Google Pay, and more.",
+      "Yes! Classroom 24x7 courses are designed for everyone. Our programs are not tied to any individual student, so anyone can enroll and start learning immediately.",
   },
   {
-    question: "How can I reset my password?",
+    question: "Does Classroom 24x7 offer demo lectures before purchasing?",
     answer:
-      "Click 'Forgot Password' on the login page to receive a reset link.",
+      "Absolutely. We provide free demo lectures so you can experience the quality of our teaching and content before you decide to buy.",
   },
   {
-    question: "Is there a mobile app available?",
-    answer: "Yes! Download it from the Play Store or Apple App Store.",
-  },
-  {
-    question: "How secure is my personal data?",
+    question: "What payment methods are accepted on Classroom 24x7?",
     answer:
-      "We use SSL/TLS encryption and comply with GDPR. Your data is safe.",
+      "We accept all major UPI apps, credit/debit cards, and popular payment gateways. This makes it easy and secure to pay for our courses.",
   },
   {
-    question: "Can I cancel my subscription anytime?",
-    answer: "Absolutely. Cancel from your account settings anytime.",
+    question: "Does Classroom 24x7 have a pay-for-use model?",
+    answer:
+      "Yes! At Classroom 24x7, you only pay for what you use. Whether you subscribe monthly or purchase specific courses occasionally, it’s completely flexible.",
   },
   {
-    question: "Do you offer discounts for non-profits?",
-    answer: "Yes, 25% off for registered non-profits. Contact our sales team.",
+    question: "Are there coupon codes or discounts on Classroom 24x7?",
+    answer:
+      "Definitely. Classroom 24x7 regularly offers promotional coupon codes and special discounts to make learning even more affordable.",
   },
   {
-    question: "How often do you release new features?",
-    answer: "Minor updates weekly, major features monthly.",
+    question: "What subjects does Classroom 24x7 cover?",
+    answer:
+      "Classroom 24x7 offers courses across English, Mathematics, and various competitive exams. Our expert teachers make sure concepts are clear with real-world examples.",
   },
   {
-    question: "What browsers are supported?",
-    answer: "Chrome, Firefox, Safari, Edge, Opera on their latest versions.",
+    question: "How qualified are the teachers on Classroom 24x7?",
+    answer:
+      "Classroom 24x7 has highly experienced educators who use student-friendly methods. They teach in a mix of Hindi and English, making learning smooth and engaging.",
   },
   {
-    question: "Is there a free trial available?",
-    answer: "Yes, a 14-day free trial. No credit card required.",
+    question: "Can I access Classroom 24x7 from my mobile?",
+    answer:
+      "Yes! You can learn on the go. Download the Classroom 24x7 app from the Google Play Store and start studying anytime, anywhere.",
+  },
+  {
+    question: "Does Classroom 24x7 provide study materials and tests?",
+    answer:
+      "Absolutely. Each course on Classroom 24x7 includes comprehensive study materials and regular tests to track your progress.",
+  },
+  {
+    question: "Is there a free trial available on Classroom 24x7?",
+    answer:
+      "Instead of a generic trial, Classroom 24x7 provides free demo lectures so you can see the teaching quality firsthand.",
+  },
+  {
+    question: "How often does Classroom 24x7 update its courses?",
+    answer:
+      "Classroom 24x7 regularly updates content and adds new features, so you always have access to the latest materials and teaching methods.",
+  },
+  {
+    question: "Can I study at my own pace with Classroom 24x7?",
+    answer:
+      "Yes! Classroom 24x7 is designed for flexible learning. You can watch lectures, revisit topics, and learn at your convenience.",
+  },
+  {
+    question: "Are Classroom 24x7 lectures bilingual?",
+    answer:
+      "Yes. Our courses are typically delivered in Hindi plus English, so students get the benefit of native explanations along with English terminology.",
+  },
+  {
+    question: "What makes Classroom 24x7 different from other platforms?",
+    answer:
+      "Classroom 24x7 stands out with its pay-for-use flexibility, free demo lectures, bilingual classes, and expert teachers. Plus, we make learning truly accessible by accepting all UPI payments.",
+  },
+  {
+    question: "How secure is my payment and data on Classroom 24x7?",
+    answer:
+      "Your security is a top priority at Classroom 24x7. We use secure payment gateways and encrypt your data to keep it safe.",
+  },
+  {
+    question: "Does Classroom 24x7 support competitive exam preparation?",
+    answer:
+      "Yes! Classroom 24x7 has tailored courses and tests for competitive exams, helping you build a strong foundation and practice effectively.",
+  },
+  {
+    question: "Can I use Classroom 24x7 for last-minute exam prep?",
+    answer:
+      "Definitely. Classroom 24x7 courses are designed to be clear and concise, perfect for brushing up on concepts even at the last minute.",
+  },
+  {
+    question:
+      "Will I get a certificate after completing a course on Classroom 24x7?",
+    answer:
+      "Some Classroom 24x7 courses come with certificates of completion, which you can use to showcase your skills.",
+  },
+  {
+    question: "Who can I contact if I have questions about Classroom 24x7?",
+    answer:
+      "You can reach out to us anytime at office.classroom24x7@gmail.com. We're happy to assist you with any queries.",
+  },
+];
+
+const testimonials = [
+  {
+    quote:
+      "Classroom 24x7 transformed my preparation. I cracked the SSC exam on the first attempt.",
+    name: "Ravi Sharma",
+    role: "SSC Aspirant",
+    image: "hhttps://i.pravatar.cc/100",
+  },
+  {
+    quote:
+      "The demo lectures convinced me. I enrolled and my son topped the school exams.",
+    name: "Sunita Patel",
+    role: "Parent",
+    image: "https://i.pravatar.cc/100",
+  },
+  {
+    quote: "Clear concepts and bilingual teaching made Maths so easy to grasp.",
+    name: "Aman Verma",
+    role: "Student",
+    image: "https://i.pravatar.cc/100",
+  },
+  {
+    quote: "Affordable, flexible and top-notch quality. Highly recommend it.",
+    name: "Priya Joshi",
+    role: "Graduate Student",
+    image: "https://i.pravatar.cc/100",
+  },
+  {
+    quote:
+      "My son loves the way concepts are explained. Thank you Classroom 24x7!",
+    name: "Manoj Mehta",
+    role: "Parent",
+    image: "https://i.pravatar.cc/100",
+  },
+  {
+    quote: "I cleared my banking prelims thanks to their mock tests.",
+    name: "Shreya Singh",
+    role: "Banking Aspirant",
+    image: "https://i.pravatar.cc/100",
+  },
+  {
+    quote:
+      "No unnecessary jargon, only clear teaching. Helped boost my confidence.",
+    name: "Vikas Patel",
+    role: "Engineering Prep",
+    image: "https://i.pravatar.cc/100",
+  },
+  {
+    quote: "Best part? Demo lectures before paying. Rare these days.",
+    name: "Neha Kumari",
+    role: "Commerce Student",
+    image: "https://i.pravatar.cc/100",
+  },
+  {
+    quote: "Quick customer support and easy-to-use app. Love it.",
+    name: "Rahul Jain",
+    role: "CA Aspirant",
+    image: "https://i.pravatar.cc/100",
+  },
+  {
+    quote: "I improved my English grammar in weeks. Superb teaching style.",
+    name: "Kiran Das",
+    role: "High School Student",
+    image: "https://i.pravatar.cc/100",
+  },
+];
+
+const achievements = [
+  { title: "5000+ App Downloads", image: "https://picsum.photos/id/1/150x100" },
+  {
+    title: "5.0 Star Play Store Rating",
+    image: "https://picsum.photos/id/2/150x100",
+  },
+  { title: "200+ Hours Content", image: "https://picsum.photos/id/3/150/100" },
+  { title: "10+ Subjects Taught", image: "https://picsum.photos/id/4/150/100" },
+  {
+    title: "95% Positive Feedback",
+    image: "https://picsum.photos/id/5/150/100",
+  },
+  {
+    title: "24x7 Learning Access",
+    image: "https://picsum.photos/id/6/150/100",
+  },
+  {
+    title: "100+ Success Stories",
+    image: "https://picsum.photos/id/7/150/100",
+  },
+  { title: "Live Doubt Clearing", image: "https://picsum.photos/id/8/150/100" },
+  {
+    title: "Regularly Updated Courses",
+    image: "https://picsum.photos/id/9/150/100",
+  },
+  {
+    title: "Secure UPI Payments",
+    image: "https://picsum.photos/id/10/150/100",
   },
 ];
 
@@ -58,15 +213,15 @@ const Home = () => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [faqVisibleCount, setFaqVisibleCount] = useState(5);
+  const [galleryTab, setGalleryTab] = useState("stories");
+  const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
 
   useEffect(() => {
-    // Menu toggle
     const toggleMenu = () => {
       document.getElementById("nav-menu")?.classList.toggle("hidden");
     };
     window.toggleMenu = toggleMenu;
 
-    // Scroll active links
     const handleScroll = () => {
       const navLinks = document.querySelectorAll("nav a");
       const fromTop = window.scrollY;
@@ -89,7 +244,6 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    // Typewriter text rotation
     const lines = [
       "Go to Play Store →",
       "Download the App →",
@@ -99,6 +253,7 @@ const Home = () => {
     ];
     let i = 0;
     const el = document.getElementById("typewriter");
+    if (!el) return;
     el.textContent = lines[i];
     const interval = setInterval(() => {
       i = (i + 1) % lines.length;
@@ -117,6 +272,7 @@ const Home = () => {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
+
   const handlePaste = (e) => {
     const paste = e.clipboardData.getData("text");
     if (!/^\d{0,10}$/.test(paste)) {
@@ -124,6 +280,7 @@ const Home = () => {
       alert("Only numeric values up to 10 digits are allowed.");
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!/^\d{10}$/.test(formData.contact)) {
@@ -156,9 +313,21 @@ const Home = () => {
     icon.classList.toggle("fa-minus");
   };
 
+  const goToTestimonial = (index) => {
+    setCurrentTestimonialIndex(index);
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTestimonialIndex((prevIndex) =>
+        prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000); // Change testimonial every 3 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="home-container">
-      {/* Header */}
       <header className="nav-header">
         <img
           src="https://github.com/Krishnapal-rajput/Classroom24x7-index/blob/main/logo/App%20icon%20Log%20512x512.jpg?raw=true"
@@ -180,7 +349,6 @@ const Home = () => {
         </nav>
       </header>
 
-      {/* Hero */}
       <section id="home" className="hero">
         <span className="hero-animation" id="typewriter"></span>
         <div className="playstore-hero-btn">
@@ -198,7 +366,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Courses */}
       <section id="courses" className="section gray-bg">
         <h2>Our Courses</h2>
         <div className="card-grid">
@@ -223,91 +390,136 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Gallery */}
       <section id="gallery" className="section">
         <h2>Gallery</h2>
-        <div className="gallery-grid">
-          {[...Array(3)].map((_, i) => (
-            <img
-              key={i}
-              src="https://img.freepik.com/free-photo/happy-business-man_23-2148018673.jpg"
-              alt={`Gallery ${i + 1}`}
-              className="gallery-img"
-            />
-          ))}
-          <iframe
-            src="https://www.youtube.com/embed/WyB8tZD5ieI"
-            allowFullScreen
-            title="Gallery Video"
-            className="gallery-video"
-          ></iframe>
+        <div className="tabs">
+          <button
+            className={galleryTab === "stories" ? "active" : ""}
+            onClick={() => setGalleryTab("stories")}
+          >
+            Success Stories
+          </button>
+          <button
+            className={galleryTab === "achievements" ? "active" : ""}
+            onClick={() => setGalleryTab("achievements")}
+          >
+            Achievements
+          </button>
         </div>
-      </section>
 
-      {/* About Us */}
-      <section id="aboutus" className="section gray-bg">
-        <h2>About Us</h2>
-        <p>
-          <strong>Author:</strong> Jitendra Kumar Makvana
-        </p>
-        <p>
-          <strong>Our Teachers:</strong> Experienced professionals in IT,
-          business, and creative fields.
-        </p>
-        <div className="card-grid">
-          {[
-            {
-              name: "Yash R.",
-              role: "M.Sc. Computer Science",
-              exp: "7 years",
-              gender: "boy",
-            },
-            {
-              name: "Deepak Kapoor",
-              role: "MBA, Marketing",
-              exp: "10 years",
-              gender: "boy",
-            },
-            {
-              name: "Seema Joshi",
-              role: "B.Ed., English",
-              exp: "5 years",
-              gender: "girl",
-            },
-            {
-              name: "Nihit Rao",
-              role: "B.Tech, Computer Science",
-              exp: "6 years",
-              gender: "boy",
-            },
-            {
-              name: "Vaani Desai",
-              role: "M.Sc., Data Science",
-              exp: "4 years",
-              gender: "girl",
-            },
-            {
-              name: "Aanshu Bansal",
-              role: "MCA, AI Specialist",
-              exp: "8 years",
-              gender: "girl",
-            },
-          ].map((member, idx) => (
-            <div key={idx} className="card">
-              <img
-                src={`https://avatar.iran.liara.run/public/${member.gender}`}
-                alt={`${member.name} avatar`}
-                className="avatar"
-              />
-              <h4>{member.name}</h4>
-              <p>{member.role}</p>
-              <p>{member.exp} of experience</p>
+        {galleryTab === "stories" && (
+          <div className="testimonials-wrapper">
+            <div className="testimonials-slider">
+              {testimonials.map((t, idx) => (
+                <div
+                  key={idx}
+                  className={`testimonial-card frame ${
+                    idx === currentTestimonialIndex ? "active" : ""
+                  }`}
+                >
+                  <img src={t.image} alt={t.name} />
+                  <blockquote>"{t.quote}"</blockquote>
+                  <p>
+                    <strong>{t.name}</strong> - {t.role}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))}
+            <div className="dot-nav">
+              {testimonials.map((_, idx) => (
+                <span
+                  key={idx}
+                  className={`dot ${
+                    idx === currentTestimonialIndex ? "active" : ""
+                  }`}
+                  onClick={() => goToTestimonial(idx)}
+                ></span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {galleryTab === "achievements" && (
+          <div className="achievements-wrapper">
+            <div className="achievements-slider">
+              {achievements.map((a, idx) => (
+                <div key={idx} className="achievement-card frame">
+                  <img src={a.image} alt={a.title} />
+                  <p>{a.title}</p>
+                </div>
+              ))}
+            </div>
+            <div className="dot-nav">
+              {achievements.map((_, idx) => (
+                <span
+                  key={idx}
+                  className={`dot ${
+                    idx === currentTestimonialIndex ? "active" : ""
+                  }`}
+                  onClick={() => goToTestimonial(idx)}
+                ></span>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* ABOUT US - Updated to your detailed teacher profile */}
+      <section id="aboutus" className="section gray-bg">
+        <h2>About the Author</h2>
+        <div className="profile-container">
+          <div className="profile-left">
+            <img
+              src="https://i.pravatar.cc/250?img=59"
+              alt="Mr. Jitendra Kumar Makwana"
+              className="avatar large"
+            />
+            <ul className="profile-details">
+              <li>
+                <strong>Name:</strong> Mr. Jitendra Kumar Makwana
+              </li>
+              <li>
+                <strong>Specialization:</strong> English & Mathematics
+              </li>
+              <li>
+                <strong>Teaching Since:</strong> 2010
+              </li>
+              <li>
+                <strong>Experience:</strong> 15+ years
+              </li>
+              <li>
+                <strong>Location:</strong> Indore, India
+              </li>
+            </ul>
+          </div>
+          <div className="profile-right">
+            <h3>Professional Summary</h3>
+            <p>
+              Mr. Jitendra is an accomplished educator with over 15 years of
+              experience teaching English, Mathematics and Physics. His
+              student-centric approach combines rigorous academic standards with
+              engaging methodologies that make complex concepts accessible.
+              Recognized for fostering critical thinking, many of his students
+              have advanced to top colleges, universities and STEM careers.
+            </p>
+
+            <h3>Education Qualifications</h3>
+            <ul>
+              <li>M.A. English</li>
+              <li>B.Ed., Indore College (2009), Indore</li>
+            </ul>
+
+            <h3>Teaching Philosophy</h3>
+            <p>
+              Believes in conceptual understanding before procedure, applying
+              real-world scenarios, and fostering a growth mindset. Uses flipped
+              classrooms, gamification, and peer teaching to make learning
+              dynamic and effective.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Inquiry */}
       <section id="inquiry" className="section">
         <h2>Inquiry Form</h2>
         <form className="form" autoComplete="off" onSubmit={handleSubmit}>
@@ -349,7 +561,6 @@ const Home = () => {
         </form>
       </section>
 
-      {/* FAQ */}
       <section id="faq" className="section gray-bg">
         <div className="faq-container">
           <div className="faq-header">
@@ -386,7 +597,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Floating Playstore */}
       <div className="floating-playstore-btn">
         <a
           href="https://play.google.com/store/apps/details?id=co.lenord.yfpfv"
@@ -401,15 +611,38 @@ const Home = () => {
         </a>
       </div>
 
-      {/* Footer */}
       <footer className="footer">
         <p>&copy; 2025 Classroom 24x7</p>
         <div className="socials">
-          <i className="fab fa-facebook"></i>
-          <i className="fab fa-twitter"></i>
-          <i className="fab fa-instagram"></i>
+          <a
+            href="https://youtube.com/classroom24x7"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i className="fab fa-youtube"></i>
+          </a>
+          <a
+            href="https://facebook.com/classroom24x7"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i className="fab fa-facebook"></i>
+          </a>
+          {/* <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+    <i className="fab fa-twitter"></i>
+  </a> */}
+          <a
+            href="https://instagram.com/classroom24x7"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i className="fab fa-instagram"></i>
+          </a>
+          <a href="mailto:office.classroom24x7@gmail.com">
+            <i className="fab fa-at"></i>
+          </a>
         </div>
-        <p>Contact: +91-1234567890 | Address: New Delhi, India</p>
+        <p>Contact: office.classroom24x7@gmail.com | Address: Indore, India</p>
         <div className="footer-play-btn">
           <a
             href="https://play.google.com/store/apps/details?id=co.lenord.yfpfv"
