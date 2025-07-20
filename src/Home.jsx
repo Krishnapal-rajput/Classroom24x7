@@ -325,7 +325,6 @@ const Home = () => {
     }, 3000); // Change testimonial every 3 seconds
     return () => clearInterval(interval);
   }, []);
-
   return (
     <div className="home-container">
       <header className="nav-header">
@@ -482,7 +481,7 @@ const Home = () => {
                 <strong>Specialization:</strong> English & Mathematics
               </li>
               <li>
-                <strong>Teaching Since:</strong> 2010
+                <strong>Teaching Since:</strong> 2007
               </li>
               <li>
                 <strong>Experience:</strong> 15+ years
@@ -506,7 +505,6 @@ const Home = () => {
             <h3>Education Qualifications</h3>
             <ul>
               <li>M.A. English</li>
-              <li>B.Ed., Indore College (2009), Indore</li>
             </ul>
 
             <h3>Teaching Philosophy</h3>
