@@ -4,6 +4,7 @@ import AdminPanel from "./Admin";
 import AdminLogin from "./AdminLogin";
 import Employee from "./Employee";
 import Home from "./Home";
+import TestPortal from "./TestPortal";
 import { auth } from "./firebaseConfig";
 
 const PrivateRoute = ({ children }) => {
@@ -16,6 +17,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/employee" element={<Employee/>} />
       <Route path="/admin-login" element={<AdminLogin />} />
+      <Route path="/testportal" element={<TestPortal />} />
       <Route
         path="/admin"
         element={

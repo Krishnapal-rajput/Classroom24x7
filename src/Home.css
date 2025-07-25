@@ -204,6 +204,26 @@ html {
   background: #1e40af;
 }
 
+/* Course Details */
+.course-details {
+  margin-top: 1rem;
+  text-align: left;
+  background: #f7fafc;
+  padding: 1rem;
+  border-radius: 0.375rem;
+}
+
+.course-details h4 {
+  font-size: 1.25rem;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.course-details ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+
 /* Teacher avatars */
 .avatar {
   width: 100%;
@@ -503,4 +523,26 @@ html {
   100% {
     transform: translateX(-100%);
   }
+}
+
+/* Button Styles for Test and Enroll */
+.test-btn {
+  background: linear-gradient(135deg, #3182CE 0%, #63B3ED 100%);
+  transition: all 0.3s ease;
+  margin-bottom: 12px;
+}
+
+.test-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(66, 153, 225, 0.3);
+}
+
+.enroll-btn {
+  background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+  transition: all 0.3s ease;
+}
+
+.enroll-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(107, 70, 193, 0.3);
 }

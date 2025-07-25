@@ -205,6 +205,52 @@ const achievements = [
   },
 ];
 
+const coursesData = [
+  {
+    id: 1,
+    title: "Modern JavaScript Mastery",
+    description: "Master modern JavaScript frameworks and build interactive web apps.",
+    image: "https://placehold.co/250x150?text=JavaScript+Course",
+    details: {
+      whoIsThisFor: [
+        "Frontend developers looking to deepen their JavaScript knowledge",
+        "Backend developers transitioning to full-stack roles",
+        "Self-taught programmers wanting to fill knowledge gaps",
+        "Anyone preparing for technical interviews",
+      ],
+      outcomes: [
+        "Master modern JavaScript syntax (ES6+)",
+        "Understand core concepts like closures and prototypes",
+        "Build interactive web applications",
+        "Work with APIs and asynchronous code",
+        "Prepare for framework learning (React, Vue, Angular)",
+      ],
+    },
+  },
+  {
+    id: 2,
+    title: "Python for Data Analysis",
+    description: "Learn to analyze and visualize data using Python and popular libraries.",
+    image: "https://placehold.co/250x150?text=Python+Course",
+    details: {
+      whoIsThisFor: [
+        "Aspiring data analysts and scientists",
+        "Business professionals working with data",
+        "Researchers needing data analysis skills",
+        "Python developers expanding their skillset",
+      ],
+      outcomes: [
+        "Clean and prepare datasets for analysis",
+        "Perform statistical analysis with Python",
+        "Create compelling data visualizations",
+        "Work with large datasets efficiently",
+        "Automate repetitive data tasks",
+      ],
+    },
+  },
+  // Add more courses as needed
+];
+
 const Home = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -215,6 +261,7 @@ const Home = () => {
   const [faqVisibleCount, setFaqVisibleCount] = useState(5);
   const [galleryTab, setGalleryTab] = useState("stories");
   const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
+  const [openCourseId, setOpenCourseId] = useState(null); // State to manage open course details
 
   useEffect(() => {
     const toggleMenu = () => {
@@ -305,6 +352,10 @@ const Home = () => {
     }
   };
 
+  const toggleCourseDetails = (id) => {
+    setOpenCourseId(openCourseId === id ? null : id); // Toggle course details
+  };
+
   const toggleFaq = (idx) => {
     const el = document.getElementById(`faq-${idx}`);
     const icon = document.getElementById(`icon-${idx}`);
@@ -325,6 +376,7 @@ const Home = () => {
     }, 3000); // Change testimonial every 3 seconds
     return () => clearInterval(interval);
   }, []);
+
   return (
     <div className="home-container">
       <header className="nav-header">
@@ -368,22 +420,39 @@ const Home = () => {
       <section id="courses" className="section gray-bg">
         <h2>Our Courses</h2>
         <div className="card-grid">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="card">
-              <img
-                src={`https://placehold.co/250x150?text=Course+${i + 1}`}
-                alt={`Course ${i + 1}`}
-              />
-              <button
-                onClick={() =>
-                  window.open(
-                    "https://play.google.com/store/apps/details?id=co.lenord.yfpfv",
-                    "_blank"
-                  )
-                }
-              >
-                Explore
+          {coursesData.map((course) => (
+            <div key={course.id} className="card">
+              <img src={course.image} alt={course.title} />
+              <h3>{course.title}</h3>
+              <p>{course.description}</p>
+              <button onClick={() => toggleCourseDetails(course.id)}>
+                {openCourseId === course.id ? "Hide Details" : "Show Details"}
               </button>
+              {openCourseId === course.id && (
+                <div className="course-details">
+                  <h4>Who is this for?</h4>
+                  <ul>
+                    {course.details.whoIsThisFor.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                  <h4>Outcomes</h4>
+                  <ul>
+                    {course.details.outcomes.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                  <p>To enroll in this course, please download the app.</p>
+                  <div className="space-y-3">
+                    <button onClick={() => window.location.href='/testportal'} className="test-btn w-full py-3 px-4 rounded-lg text-white font-bold text-center">
+                      Take Test
+                    </button>
+                    <button onClick={() => window.open('https://play.google.com/store/apps/details?id=co.lenord.yfpfv','_blank')} className="enroll-btn w-full py-3 px-4 rounded-lg text-white font-bold text-center">
+                      Download App to Enroll
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -626,9 +695,6 @@ const Home = () => {
           >
             <i className="fab fa-facebook"></i>
           </a>
-          {/* <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-    <i className="fab fa-twitter"></i>
-  </a> */}
           <a
             href="https://instagram.com/classroom24x7"
             target="_blank"
